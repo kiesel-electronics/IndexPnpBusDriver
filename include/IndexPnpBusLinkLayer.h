@@ -11,7 +11,7 @@
 
 #include "IndexPnpBus_config.h"
 #include "HAL_uart_Interface.h"
-#include "IndexPnpBus_Interface.h"
+#include "IndexPnpBusInterface.h"
 #include "IndexPnpBusPdu.h"
 
 

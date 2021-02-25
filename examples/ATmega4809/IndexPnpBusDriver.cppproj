@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.AVRGCC8.CPP</ToolchainName>
+    <ProjectGuid>dce6c7e3-ee26-4d79-826b-08594b9ad897</ProjectGuid>
+    <avrdevice>ATmega4809</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>Executable</OutputType>
+    <Language>CPP</Language>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AssemblyName>IndexPnpBusDriver</AssemblyName>
+    <Name>IndexPnpBusDriver</Name>
+    <RootNamespace>IndexPnpBusDriver</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <BootSegment>2</BootSegment>
+    <ResetRule>0</ResetRule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <EraseKey />
+    <AsfFrameworkConfig>
+      <framework-data xmlns="">
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.49.1" />
+        </dependencies>
+      </framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <AvrGccCpp>
+        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega4809"</avrgcc.common.Device>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>NDEBUG</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcccpp.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>NDEBUG</Value>
+          </ListValues>
+        </avrgcccpp.compiler.symbols.DefSymbols>
+        <avrgcccpp.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcccpp.compiler.directories.IncludePaths>
+        <avrgcccpp.compiler.optimization.level>Optimize for size (-Os)</avrgcccpp.compiler.optimization.level>
+        <avrgcccpp.compiler.optimization.PackStructureMembers>True</avrgcccpp.compiler.optimization.PackStructureMembers>
+        <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcccpp.compiler.warnings.AllWarnings>True</avrgcccpp.compiler.warnings.AllWarnings>
+        <avrgcccpp.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avrgcccpp.linker.libraries.Libraries>
+        <avrgcccpp.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcccpp.assembler.general.IncludePaths>
+      </AvrGccCpp>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <AvrGccCpp>
+        <avrgcc.common.Device>-mmcu=atmega4809 -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega4809"</avrgcc.common.Device>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>DEBUG</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../Config</Value>
+            <Value>../examples/include</Value>
+            <Value>../include</Value>
+            <Value>../utils</Value>
+            <Value>../utils/assembler</Value>
+            <Value>../</Value>
+            <Value>../../../include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize debugging experience (-Og)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcccpp.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>DEBUG</Value>
+          </ListValues>
+        </avrgcccpp.compiler.symbols.DefSymbols>
+        <avrgcccpp.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../Config</Value>
+            <Value>../examples/include</Value>
+            <Value>../include</Value>
+            <Value>../utils</Value>
+            <Value>../utils/assembler</Value>
+            <Value>../</Value>
+            <Value>../../../include</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcccpp.compiler.directories.IncludePaths>
+        <avrgcccpp.compiler.optimization.level>Optimize debugging experience (-Og)</avrgcccpp.compiler.optimization.level>
+        <avrgcccpp.compiler.optimization.PackStructureMembers>True</avrgcccpp.compiler.optimization.PackStructureMembers>
+        <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcccpp.compiler.optimization.DebugLevel>Default (-g2)</avrgcccpp.compiler.optimization.DebugLevel>
+        <avrgcccpp.compiler.warnings.AllWarnings>True</avrgcccpp.compiler.warnings.AllWarnings>
+        <avrgcccpp.compiler.miscellaneous.OtherFlags>-std=c++11</avrgcccpp.compiler.miscellaneous.OtherFlags>
+        <avrgcccpp.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+          </ListValues>
+        </avrgcccpp.linker.libraries.Libraries>
+        <avrgcccpp.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../</Value>
+            <Value>../Config</Value>
+            <Value>../examples/include</Value>
+            <Value>../include</Value>
+            <Value>../utils</Value>
+            <Value>../utils/assembler</Value>
+            <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.6.364\include\</Value>
+          </ListValues>
+        </avrgcccpp.assembler.general.IncludePaths>
+        <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
+      </AvrGccCpp>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\include\HAL_uart_Atmega0.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\HAL_uart_Atmega0.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\HAL_uart_Interface.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\HAL_uart_Interface.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBusClient.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusClient.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBusEnums.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusEnums.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBusInterface.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusInterface.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBusLinkLayer.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusLinkLayer.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBusPdu.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusPdu.h</Link>
+    </Compile>
+    <Compile Include="..\..\include\IndexPnpBus_config.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBus_config.h</Link>
+    </Compile>
+    <Compile Include="..\..\src\HAL_uart_Atmega0.cpp">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\src\HAL_uart_Atmega0.cpp</Link>
+    </Compile>
+    <Compile Include="..\..\src\IndexPnpBusClient.cpp">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\src\IndexPnpBusClient.cpp</Link>
+    </Compile>
+    <Compile Include="..\..\src\IndexPnpBusLinkLayer.cpp">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\src\IndexPnpBusLinkLayer.cpp</Link>
+    </Compile>
+    <Compile Include="..\..\src\IndexPnpBusPdu.cpp">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\src\IndexPnpBusPdu.cpp</Link>
+    </Compile>
+    <Compile Include="atmel_start.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="atmel_start.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Config\clock_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver_isr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\atmel_start_pins.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\bod.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\ccp.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\clkctrl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\cpuint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\driver_init.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\IndexPnPFeederAppl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\port.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\protected_io.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\rstctrl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\slpctrl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\system.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\tca.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\bod.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\clkctrl.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\cpuint.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\driver_init.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\IndexPnPFeederAppl.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\protected_io.S">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\slpctrl.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\tca.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\assembler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\assembler\gas.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\assembler\iar.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\atomic.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\compiler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\interrupt_avr8.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\utils.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="utils\utils_assert.h">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".atmelstart\" />
+    <Folder Include="Config\" />
+    <Folder Include="include\" />
+    <Folder Include="IndexPnpBusDriver" />
+    <Folder Include="IndexPnpBusDriver\include" />
+    <Folder Include="IndexPnpBusDriver\src" />
+    <Folder Include="src\" />
+    <Folder Include="utils\" />
+    <Folder Include="utils\assembler\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".atmelstart\AtmelStart.env_conf">
+      <SubType>compile</SubType>
+    </None>
+    <None Include=".atmelstart\AtmelStart.gpdsc">
+      <SubType>compile</SubType>
+    </None>
+    <None Include=".atmelstart\atmel_start_config.atstart">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="Default.xml">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
