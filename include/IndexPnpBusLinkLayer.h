@@ -34,7 +34,6 @@ class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
     int transmitPdu(IndexPnpBusPdu &pdu);
     uint8_t deviceAddress;
 
-  private:
     HAL_uart_Interface* uart;
     uint32_t lastBusActivityTimestamp_us;
         
@@ -62,13 +61,13 @@ class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
       checksumHigh,
     };
       
+    IndexPnpBusPdu txPdu;
+    txFrameStatusType txStatus;
+
     IndexPnpBusPdu rxPdu;
     rxFrameStatusType rxStatus;
     uint16_t rxErrorCnt;
-    uint16_t rxSuccessCnt;
-        
-    IndexPnpBusPdu txPdu;
-    txFrameStatusType txStatus;
+    uint16_t rxSuccessCnt;    
 };
 
 

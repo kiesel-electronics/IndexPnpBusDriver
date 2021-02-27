@@ -6,25 +6,24 @@
  */ 
 
 
-#ifndef INDEXPNPBUS_H_
-#define INDEXPNPBUS_H_
+#ifndef INDEXPNPBUSCLIENT_H_
+#define INDEXPNPBUSCLIENT_H_
 
 #include "IndexPnpBusLinkLayer.h"
 
 class IndexPnpBusClient : public IndexPnpBusLinkLayer {
 public:
   IndexPnpBusClient();
-  void Init(IndexPnpBusSlave_cbk_Interface* _appModule);
-  void Handler();
+  void Init(IndexPnpBusClient_cbk_Interface* _appModule);
 
 protected:
   void receivePdu(IndexPnpBusPdu &pdu);
   void txFrameComplete(void);
 
 private:
-  IndexPnpBusSlave_cbk_Interface* appModule;
+  IndexPnpBusClient_cbk_Interface* appModule;
 };
 
 
 
-#endif /* INDEXPNPBUS_H_ */
+#endif /* INDEXPNPBUSCLIENT_H_ */

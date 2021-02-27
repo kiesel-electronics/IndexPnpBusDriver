@@ -11,6 +11,7 @@
 
 #include "IndexPnpBus_config.h"
 #include "IndexPnPBusEnums.h"
+#include "string.h"
 
 
 class IndexPnpBusPdu {
@@ -25,8 +26,9 @@ class IndexPnpBusPdu {
     void Init(void);
     uint16_t calculateCrc16(void);
     bool checkCrc(void);
-    void setResponse(IndexPnpBusResponseCode IndexPnpBusResponseCode, uint8_t _payloadLength, uint8_t* _payload);
-   
+    void buildRequest(IndexPnpBusFunctionCode functionCode, uint8_t targetAddress, uint8_t _payloadLength, uint8_t* _payload);
+    void buildResponse(IndexPnpBusResponseCode responseCode, uint8_t _payloadLength, uint8_t* _payload);
+       
   private:
     static const uint8_t crc16LookupHigh[256];
     static const uint8_t crc16LookupLow[256];

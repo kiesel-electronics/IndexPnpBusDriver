@@ -190,6 +190,10 @@
       <SubType>compile</SubType>
       <Link>IndexPnpBusDriver\include\IndexPnpBusEnums.h</Link>
     </Compile>
+    <Compile Include="..\..\include\IndexPnpBusHost.h">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\include\IndexPnpBusHost.h</Link>
+    </Compile>
     <Compile Include="..\..\include\IndexPnpBusInterface.h">
       <SubType>compile</SubType>
       <Link>IndexPnpBusDriver\include\IndexPnpBusInterface.h</Link>
@@ -213,6 +217,10 @@
     <Compile Include="..\..\src\IndexPnpBusClient.cpp">
       <SubType>compile</SubType>
       <Link>IndexPnpBusDriver\src\IndexPnpBusClient.cpp</Link>
+    </Compile>
+    <Compile Include="..\..\src\IndexPnpBusHost.cpp">
+      <SubType>compile</SubType>
+      <Link>IndexPnpBusDriver\src\IndexPnpBusHost.cpp</Link>
     </Compile>
     <Compile Include="..\..\src\IndexPnpBusLinkLayer.cpp">
       <SubType>compile</SubType>

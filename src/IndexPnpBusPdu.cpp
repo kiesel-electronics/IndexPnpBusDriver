@@ -14,12 +14,14 @@ IndexPnpBusPdu::IndexPnpBusPdu() {
   currentPosition = 0;
 }
 
+
  void IndexPnpBusPdu::Init() {
    deviceAddress = 0;
    payloadLength = 0;
    crc = 0;
    currentPosition = 0;
  }
+
 
  uint16_t IndexPnpBusPdu::calculateCrc16(void) {
    uint8_t crc16High = 0xFF ; /* high byte of CRC initialized  */
@@ -52,22 +54,34 @@ IndexPnpBusPdu::IndexPnpBusPdu() {
  bool IndexPnpBusPdu::checkCrc() {
    return (crc == calculateCrc16());
  }
+ 
+
+void IndexPnpBusPdu::buildRequest(IndexPnpBusFunctionCode functionCode, uint8_t targetAddress, uint8_t _payloadLength, uint8_t* _payload) {
+  deviceAddress = targetAddress;
+  payloadLength = _payloadLength + 1;
+  payload[0] = (uint8_t)functionCode;
+  if (_payloadLength > (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE)) {
+    _payloadLength = (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE);
+  }
+  memcpy(payload+1, _payload, _payloadLength);
+  currentPosition = 0;
+}
 
 
-
-void IndexPnpBusPdu::setResponse(IndexPnpBusResponseCode IndexPnpBusResponseCode, uint8_t _payloadLength, uint8_t* _payload) {
+void IndexPnpBusPdu::buildResponse(IndexPnpBusResponseCode responseCode, uint8_t _payloadLength, uint8_t* _payload) {
   deviceAddress = INDEX_PNP_BUS_HOST_ADDRESS;
   payloadLength = _payloadLength + 2;
   payload[0] = deviceAddress;
-  payload[1] = (uint8_t)IndexPnpBusResponseCode;
-  for (int i = 0; i < _payloadLength; i++) {
-    payload[i+2] = _payload[i];
+  payload[1] = (uint8_t)responseCode;
+  if (_payloadLength > (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE)) {
+    _payloadLength = (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE);
   }
+  memcpy(payload+2, _payload, _payloadLength);
   currentPosition = 0;
 }
- 
 
-  const uint8_t IndexPnpBusPdu::crc16LookupHigh[256] = {
+
+const uint8_t IndexPnpBusPdu::crc16LookupHigh[256] = {
     0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
     0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
     0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
@@ -85,7 +99,7 @@ void IndexPnpBusPdu::setResponse(IndexPnpBusResponseCode IndexPnpBusResponseCode
     0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
     0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40};
 
-  const uint8_t IndexPnpBusPdu::crc16LookupLow[256] = {
+const uint8_t IndexPnpBusPdu::crc16LookupLow[256] = {
     0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06, 0x07, 0xC7, 0x05, 0xC5, 0xC4, 0x04,
     0xCC, 0x0C, 0x0D, 0xCD, 0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09, 0x08, 0xC8,
     0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A, 0x1E, 0xDE, 0xDF, 0x1F, 0xDD, 0x1D, 0x1C, 0xDC,

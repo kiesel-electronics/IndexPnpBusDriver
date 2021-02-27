@@ -6,11 +6,11 @@
  */ 
 
 #include "IndexPnpBusClient.h"
-#include "string.h"
 
 IndexPnpBusClient::IndexPnpBusClient() {
 
 };
+
 
 void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
   IndexPnpBusPdu txPdu;
@@ -21,7 +21,7 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
   switch((IndexPnpBusFunctionCode)(rxPdu.payload[0])) {
     case IndexPnpBusFunctionCode::getFeederId:
       res = appModule->getFeederId(uuid);
-      txPdu.setResponse(res, 12, uuid);
+      txPdu.buildResponse(res, 12, uuid);
       transmitPdu(txPdu);
     break;
 
@@ -29,25 +29,25 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
       // copy uuid from payload
       memcpy(uuid, &rxPdu.payload[1], 12);
       res = appModule->initializeFeeder(uuid);
-      txPdu.setResponse(res, 0, uuid);
+      txPdu.buildResponse(res, 0, uuid);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::getVersion:
       res = appModule->getFeederVersion(version);
-      txPdu.setResponse(res, 4, version);
+      txPdu.buildResponse(res, 4, version);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::moveFeedForward:
       res = appModule->moveFeederForward(rxPdu.payload[1]);
-      txPdu.setResponse(res, 0, uuid);
+      txPdu.buildResponse(res, 0, uuid);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::moveFeedBackward:
       res = appModule->moveFeederBackward(rxPdu.payload[1]);
-      txPdu.setResponse(res, 0, uuid);
+      txPdu.buildResponse(res, 0, uuid);
       transmitPdu(txPdu);
     break;
 
@@ -55,7 +55,7 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
       // copy uuid from payload
       memcpy(uuid, &rxPdu.payload[1], 12);
       res = appModule->getFeederAddress(uuid);
-      txPdu.setResponse(res, 0, uuid);
+      txPdu.buildResponse(res, 0, uuid);
       if (res == IndexPnpBusResponseCode::ok) {
         transmitPdu(txPdu);
       }
@@ -65,14 +65,13 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
    return;
 }
 
-void IndexPnpBusClient::Handler() {
-}
 
 void IndexPnpBusClient::txFrameComplete(void){
 
 }
 
-void IndexPnpBusClient::Init(IndexPnpBusSlave_cbk_Interface* _appModule){
+
+void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule){
   this->appModule = _appModule;
 }
 

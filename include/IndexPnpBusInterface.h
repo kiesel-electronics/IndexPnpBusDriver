@@ -11,7 +11,7 @@
 
 #include "IndexPnpBusPdu.h"
 
-class IndexPnpBusSlave_cbk_Interface {
+class IndexPnpBusClient_cbk_Interface {
 public:
   virtual IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
   virtual IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);
@@ -23,6 +23,17 @@ public:
   virtual IndexPnpBusResponseCode getFeederAddress(uint8_t (&uuid_in)[12]);
 };
 
+class IndexPnpBusHost_cbk_Interface {
+  public:
+  virtual void getFeederIdResponse(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in);
+  virtual void initializeFeederResponse(IndexPnpBusResponseCode responseCode);
+  virtual void getFeederVersionResponse(IndexPnpBusResponseCode responseCode, uint8_t *version_in);
+  virtual void moveFeederForwardResponse(IndexPnpBusResponseCode responseCode);
+  virtual void moveFeederBackwardResponse(IndexPnpBusResponseCode responseCode);
+
+  // broadcast commands
+  virtual void getFeederAddressResponse(IndexPnpBusResponseCode responseCode, uint8_t feederAddress);
+};
 
 
 #endif /* INDEXPNPBUS_INTERFACE_H_ */
