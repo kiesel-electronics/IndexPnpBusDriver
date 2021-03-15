@@ -22,34 +22,10 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#include "HAL_platform.h"
 
-#ifndef HAL_UART_H_
-#define HAL_UART_H_
+#ifndef HAL_PLATFORM_H_
+#define HAL_PLATFORM_H_
 
-/**
- * \interface HAL_serial_cbk_Interace
- * \brief This is the interface, that are needed by the serial HAL
- *
- * This interface defines all callbacks, that the serial Hardware Abstraction Layer uses. 
- *
- */
-class HAL_uart_cbk_Interface {
-  public:
-  virtual void rxComplete(uint8_t byte);
-  virtual void txComplete(void);
-};
+#include "Arduino.h"
 
-class HAL_uart_Interface {
-  public:
-    virtual void setDirectionToTx(void) = 0;
-    virtual void setDirectionToRx(void) = 0;
-    virtual bool writeByte(uint8_t data) = 0;
-    virtual void enableTxInterrupt(void) = 0;
-    virtual void disableTxInterrupt(void) = 0;
-    virtual uint32_t getBaudrate(void) = 0;
-    virtual uint32_t getTime_us(void) = 0;
-  };
-
-
-#endif /* HAL_UART_H_ */
+#endif /* HAL_PLATFORM_H_ */

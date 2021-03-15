@@ -5,7 +5,7 @@
 // <<< Use Configuration Wizard in Context Menu >>>
 
 #ifndef F_CPU
-#define F_CPU 16000000
+#define F_CPU (16000000L)
 #endif
 // <h> USART Clock Settings
 // <y> USART Clock source
@@ -14,6 +14,7 @@
 // <id> usart_clock_source
 #define CONF_USART_SRC CLK_MAIN
 
+#define MILLIS_USE_TIMERB0
 // </h>
 
 // <<< end of configuration section >>>

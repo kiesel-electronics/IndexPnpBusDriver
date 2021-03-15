@@ -22,34 +22,27 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#include "HAL_platform.h"
 
-#ifndef HAL_UART_H_
-#define HAL_UART_H_
+#ifndef INDEXPNPFEEDERAPPL_H_
+#define INDEXPNPFEEDERAPPL_H_
 
-/**
- * \interface HAL_serial_cbk_Interace
- * \brief This is the interface, that are needed by the serial HAL
- *
- * This interface defines all callbacks, that the serial Hardware Abstraction Layer uses. 
- *
- */
-class HAL_uart_cbk_Interface {
-  public:
-  virtual void rxComplete(uint8_t byte);
-  virtual void txComplete(void);
+#include <IndexPnpBusInterface.h>
+
+class IndexPnPFeederHostAppl : public IndexPnpBusHost_cbk_Interface {
+public:
+  void responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in);
+  void responseInitializeFeeder(IndexPnpBusResponseCode responseCode);
+  void responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in);
+  void responseMoveFeederForward(IndexPnpBusResponseCode responseCode);
+  void responseMoveFeederBackward(IndexPnpBusResponseCode responseCode);
+
+  // broadcast commands
+  void responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress);
+
+protected:
+private:
 };
 
-class HAL_uart_Interface {
-  public:
-    virtual void setDirectionToTx(void) = 0;
-    virtual void setDirectionToRx(void) = 0;
-    virtual bool writeByte(uint8_t data) = 0;
-    virtual void enableTxInterrupt(void) = 0;
-    virtual void disableTxInterrupt(void) = 0;
-    virtual uint32_t getBaudrate(void) = 0;
-    virtual uint32_t getTime_us(void) = 0;
-  };
 
 
-#endif /* HAL_UART_H_ */
+#endif /* INDEXPNPFEEDERAPPL_H_ */

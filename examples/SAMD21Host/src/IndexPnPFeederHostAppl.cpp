@@ -22,34 +22,36 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#include "HAL_platform.h"
-
-#ifndef HAL_UART_H_
-#define HAL_UART_H_
-
-/**
- * \interface HAL_serial_cbk_Interace
- * \brief This is the interface, that are needed by the serial HAL
- *
- * This interface defines all callbacks, that the serial Hardware Abstraction Layer uses. 
- *
- */
-class HAL_uart_cbk_Interface {
-  public:
-  virtual void rxComplete(uint8_t byte);
-  virtual void txComplete(void);
-};
-
-class HAL_uart_Interface {
-  public:
-    virtual void setDirectionToTx(void) = 0;
-    virtual void setDirectionToRx(void) = 0;
-    virtual bool writeByte(uint8_t data) = 0;
-    virtual void enableTxInterrupt(void) = 0;
-    virtual void disableTxInterrupt(void) = 0;
-    virtual uint32_t getBaudrate(void) = 0;
-    virtual uint32_t getTime_us(void) = 0;
-  };
+ #include "IndexPnPFeederHostAppl.h"
 
 
-#endif /* HAL_UART_H_ */
+void IndexPnPFeederHostAppl::responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) {
+  SerialUSB.print("GetFeederId response: ");
+  SerialUSB.println(HEX, uuid_in[0]);
+}
+
+void IndexPnPFeederHostAppl::responseInitializeFeeder(IndexPnpBusResponseCode responseCode) {
+  SerialUSB.print("Init Feeder response: ");
+  SerialUSB.println((uint8_t)responseCode);
+}
+
+
+void IndexPnPFeederHostAppl::responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) {
+
+}
+
+
+void IndexPnPFeederHostAppl::responseMoveFeederForward(IndexPnpBusResponseCode responseCode) {
+
+}
+
+
+void IndexPnPFeederHostAppl::responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) {
+
+}
+
+// broadcast commands
+void IndexPnPFeederHostAppl::responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress) {
+
+}
+

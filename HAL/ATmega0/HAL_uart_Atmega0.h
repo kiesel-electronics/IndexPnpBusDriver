@@ -22,34 +22,42 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#include "HAL_platform.h"
+#ifndef HAL_UART_ATMEGA0_H_
+#define HAL_UART_ATMEGA0_H_
 
-#ifndef HAL_UART_H_
-#define HAL_UART_H_
+#include "HAL_uart_Interface.h"
+#include "clock_config.h"
+#include "wiring.h"
 
-/**
- * \interface HAL_serial_cbk_Interace
- * \brief This is the interface, that are needed by the serial HAL
- *
- * This interface defines all callbacks, that the serial Hardware Abstraction Layer uses. 
- *
- */
-class HAL_uart_cbk_Interface {
+class HAL_uart_Atmega0 : public HAL_uart_Interface {
   public:
-  virtual void rxComplete(uint8_t byte);
-  virtual void txComplete(void);
+    HAL_uart_Atmega0(USART_t* _uartCh);
+    void Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudrate);
+    void setDirectionToTx(void);
+    void setDirectionToRx(void);
+    bool writeByte(uint8_t data);
+    void enableTxInterrupt(void);
+    void disableTxInterrupt(void);
+    uint32_t getBaudrate(void);
+    uint32_t getTime_us(void);
+
+
+    /**
+     * Transmit Complete Interrupt function
+     */
+    void rxIrq(void);
+    /**
+     * Data Register Empty interrupt function
+     * 
+     */
+    void txIrq(void);
+  protected:
+  private:
+    HAL_uart_cbk_Interface* nextLayer;
+    uint32_t baudrate;
+    USART_t* uartCh;
 };
 
-class HAL_uart_Interface {
-  public:
-    virtual void setDirectionToTx(void) = 0;
-    virtual void setDirectionToRx(void) = 0;
-    virtual bool writeByte(uint8_t data) = 0;
-    virtual void enableTxInterrupt(void) = 0;
-    virtual void disableTxInterrupt(void) = 0;
-    virtual uint32_t getBaudrate(void) = 0;
-    virtual uint32_t getTime_us(void) = 0;
-  };
 
 
-#endif /* HAL_UART_H_ */
+#endif /* HAL_UART_ATMEGA0_H_ */

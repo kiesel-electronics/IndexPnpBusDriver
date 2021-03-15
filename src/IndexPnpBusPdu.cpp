@@ -1,9 +1,26 @@
-/*
- * IndexPnpBusPdu.cpp
+ /******************************************************************************
+ *  The MIT License (MIT)
  *
- * Created: 22.02.2021 13:32:44
- *  Author: f.kiesel
- */ 
+ *  Copyright (c) 2021 Friedrich Kiesel
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ *******************************************************************************/
 
  #include "IndexPnpBusPdu.h"
 
@@ -24,37 +41,37 @@ IndexPnpBusPdu::IndexPnpBusPdu() {
 
 
  uint16_t IndexPnpBusPdu::calculateCrc16(void) {
-   uint8_t crc16High = 0xFF ; /* high byte of CRC initialized  */
-   uint8_t crc16Low = 0xFF ; /* low byte of CRC initialized  */
-   uint8_t uIndex ; /* will index into CRC lookup table  */
+   uint8_t crc16High = 0xFF; /* high byte of CRC initialized  */
+   uint8_t crc16Low = 0xFF; /* low byte of CRC initialized  */
+   uint8_t uIndex; /* will index into CRC lookup table  */
 
    // address
-   uIndex = crc16Low ^ deviceAddress ; /* calculate the CRC  */
-   crc16Low = crc16High ^ crc16LookupHigh[uIndex] ;
-   crc16High = crc16LookupLow[uIndex] ;
+   uIndex = crc16Low ^ deviceAddress; /* calculate the CRC  */
+   crc16Low = crc16High ^ crc16LookupHigh[uIndex];
+   crc16High = crc16LookupLow[uIndex];
 
    // payload size
-   uIndex = crc16Low ^ payloadLength ; /* calculate the CRC  */
-   crc16Low = crc16High ^ crc16LookupHigh[uIndex] ;
-   crc16High = crc16LookupLow[uIndex] ;
+   uIndex = crc16Low ^ payloadLength; /* calculate the CRC  */
+   crc16Low = crc16High ^ crc16LookupHigh[uIndex];
+   crc16High = crc16LookupLow[uIndex];
 
    // payload
    uint8_t* msgBuf = payload;
    uint8_t dataLength = payloadLength;
    while (dataLength--) /* pass through message buffer  */
    {
-     uIndex = crc16Low ^ *msgBuf++ ; /* calculate the CRC  */
-     crc16Low = crc16High ^ crc16LookupHigh[uIndex] ;
-     crc16High = crc16LookupLow[uIndex] ;
+     uIndex = crc16Low ^ *msgBuf++; /* calculate the CRC  */
+     crc16Low = crc16High ^ crc16LookupHigh[uIndex];
+     crc16High = crc16LookupLow[uIndex];
    }
-   return (((uint16_t)crc16High) << 8 | crc16Low) ;
+   return (((uint16_t)crc16High) << 8 | crc16Low);
  }
 
 
  bool IndexPnpBusPdu::checkCrc() {
    return (crc == calculateCrc16());
  }
- 
+
 
 void IndexPnpBusPdu::buildRequest(IndexPnpBusFunctionCode functionCode, uint8_t targetAddress, uint8_t _payloadLength, uint8_t* _payload) {
   deviceAddress = targetAddress;
