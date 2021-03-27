@@ -26,7 +26,7 @@
 #include "stm32yyxx_ll.h"
 #include "HAL_uart_Stm32.h"
 #include "IndexPnpBusClient.h"
-#include "IndexPnPFeederAppl.h"
+#include "IndexPnPFeederClientAppl.h"
 
 
 #define RS485_DE_PIN   (PA15)
