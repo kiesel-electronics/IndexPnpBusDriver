@@ -22,40 +22,62 @@
  *  SOFTWARE.
  *******************************************************************************/
 
- #include "IndexPnPFeederHostAppl.h"
+#include <Arduino.h>
+#include <IndexPnpBusClient.h>
 
+#include "HAL_uart_Stm32.h"
+#include "IndexPnpBusClient.h"
+#include "IndexPnPFeederAppl.h"
 
-void IndexPnPFeederHostAppl::responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) {
-  SerialUSB.print("GetFeederId response: ");
-  SerialUSB.println(HEX, uuid_in[0]);
+#define RS485_DE_PIN   (PA15)
+#define RS485_RE_PIN   (PA8)
+
+int uart1_tx_cbk(serial_t *obj);
+void uart1_rx_cbk(serial_t *obj);
+
+HAL_uart_Stm32 IndexPnpUart_0(USART1, RS485_DE_PIN, RS485_RE_PIN, uart1_tx_cbk, uart1_rx_cbk);
+IndexPnpBusClient IndexPnpBusClient_0;
+IndexPnPFeederAppl Application;
+
+int uart1_tx_cbk(serial_t *obj) {
+  return IndexPnpUart_0._tx_complete_irq(obj);
 }
 
-void IndexPnPFeederHostAppl::responseInitializeFeeder(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Init Feeder response: ");
-  SerialUSB.println((uint8_t)responseCode);
+void uart1_rx_cbk(serial_t *obj) {
+  IndexPnpUart_0._rx_complete_irq(obj);
 }
 
+uint32_t Timer500ms;
 
-void IndexPnPFeederHostAppl::responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) {
-  SerialUSB.print("Get Feeder version response: ");
-  SerialUSB.println((uint8_t)responseCode);
+//HardwareSerial Serial2(PA3, PA2);
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  SerialUSB.begin();
+  Serial1.begin(9600);
+//  Serial1.print("Hello");
+  //Serial2.begin(19200);
+  //Serial2.print("Hello");
+
+  IndexPnpUart_0.Init(&IndexPnpBusClient_0, 19200);
+  IndexPnpBusClient_0.InitLl(&IndexPnpUart_0, 0x02);
+  IndexPnpBusClient_0.Init(&Application);
+
+  Timer500ms = IndexPnpUart_0.getTime_us();
+  //Timer500ms += 500;
 }
 
+void loop() {
+  static uint8_t led_cnt = 0;
 
-void IndexPnPFeederHostAppl::responseMoveFeederForward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder forward response: ");
-  SerialUSB.println((uint8_t)responseCode);
+  if (Timer500ms < IndexPnpUart_0.getTime_us()){
+    Timer500ms += 500000;
+    digitalWrite(LED_BUILTIN, led_cnt&0x01);
+    led_cnt++;
+
+    //IndexPnpBusClient_0.SendTestFrm();
+    //IndexPnpUart_0.writeByte(0x55);
+    
+//    Serial2.print("H");
+  }
 }
-
-
-void IndexPnPFeederHostAppl::responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder backward response: ");
-  SerialUSB.println((uint8_t)responseCode);
-}
-
-// broadcast commands
-void IndexPnPFeederHostAppl::responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress) {
-  SerialUSB.print("Get Feeder address response: ");
-  SerialUSB.println((uint8_t)responseCode);
-}
-

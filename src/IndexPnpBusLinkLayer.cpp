@@ -133,7 +133,7 @@ void IndexPnpBusLinkLayer::rxComplete(uint8_t rxByte) {
           }
         }
         // forward only frames for this device
-        if (rxPdu.deviceAddress == deviceAddress) {
+        if ((rxPdu.deviceAddress == deviceAddress) || (rxPdu.deviceAddress == INDEX_PNP_BUS_BROADCAST)) {
           receivePdu(rxPdu);
         }
       } else {

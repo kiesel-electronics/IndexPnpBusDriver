@@ -83,12 +83,18 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
 }
 
 
-void IndexPnpBusClient::txFrameComplete(void){
+void IndexPnpBusClient::txFrameComplete(void) {
 
 }
 
 
-void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule){
+void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule) {
   this->appModule = _appModule;
 }
 
+
+void IndexPnpBusClient::SendTestFrm() {
+  uint8_t pay[16] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+      txPdu.buildResponse(IndexPnpBusResponseCode::ok, 8, pay);
+      transmitPdu(txPdu);
+}

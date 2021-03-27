@@ -33,6 +33,8 @@ public:
   IndexPnpBusClient();
   void Init(IndexPnpBusClient_cbk_Interface* _appModule);
 
+  void SendTestFrm();
+
 protected:
   void receivePdu(IndexPnpBusPdu &pdu);
   void txFrameComplete(void);

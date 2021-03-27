@@ -88,7 +88,7 @@ void IndexPnpBusPdu::buildRequest(IndexPnpBusFunctionCode functionCode, uint8_t 
 void IndexPnpBusPdu::buildResponse(IndexPnpBusResponseCode responseCode, uint8_t _payloadLength, uint8_t* _payload) {
   deviceAddress = INDEX_PNP_BUS_HOST_ADDRESS;
   payloadLength = _payloadLength + 2;
-  payload[0] = deviceAddress;
+  payload[0] = deviceAddress;  // TODO das stimmt was nicht
   payload[1] = (uint8_t)responseCode;
   if (_payloadLength > (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE)) {
     _payloadLength = (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE);

@@ -60,15 +60,45 @@ void setup() {
 }
 
 void loop() {
-  //uint8_t uuid_in[12] = {0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78};
+  uint8_t uuid_in[12] = {0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78};
   static uint8_t led_cnt = 0;
   static uint8_t frm_cnt = 0;
   // put your main code here, to run repeatedly:
   //delay(1000);
   if(SerialUSB.available()) {
     int read = SerialUSB.read();
+    char rec = read & 0xFF;
     SerialUSB.println(frm_cnt);
-    IndexPnpBusHost_0.getFeederId(0x02);
+
+    switch (rec) {
+      case '1':
+        SerialUSB.println("Send getFeederId");
+        IndexPnpBusHost_0.getFeederId(0x02);
+        break;
+      case '2':
+        SerialUSB.println("Send initializeFeeder");
+        IndexPnpBusHost_0.initializeFeeder(0x02, uuid_in);
+        break;
+      case '3':
+        SerialUSB.println("Send getFeederVersion");
+        IndexPnpBusHost_0.getFeederVersion(0x02);
+        break;
+      case '4':
+        SerialUSB.println("Send moveFeederForward");
+        IndexPnpBusHost_0.moveFeederForward(0x02, 8);
+        break;
+      case '5':
+        SerialUSB.println("Send moveFeederBackward");
+        IndexPnpBusHost_0.moveFeederBackward(0x02, 8);
+        break;
+      case 'A':
+        SerialUSB.println("Send getFeederAddress");
+        IndexPnpBusHost_0.getFeederAddress(uuid_in);
+        break;
+
+        
+    }
+
     frm_cnt++;
   }
   

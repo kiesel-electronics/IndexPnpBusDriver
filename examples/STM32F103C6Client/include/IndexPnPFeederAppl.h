@@ -22,46 +22,25 @@
  *  SOFTWARE.
  *******************************************************************************/
 
+#ifndef INDEXPNPFEEDERAPPL_H_
+#define INDEXPNPFEEDERAPPL_H_
 
- #include "IndexPnPFeederAppl.h"
+#include <IndexPnpBusInterface.h>
+
+class IndexPnPFeederAppl : public IndexPnpBusClient_cbk_Interface {
+public:
+  IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
+  IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);
+  IndexPnpBusResponseCode getFeederVersion(uint8_t (&version_in)[4]);
+  IndexPnpBusResponseCode moveFeederForward(uint8_t distance);
+  IndexPnpBusResponseCode moveFeederBackward(uint8_t distance);
+
+  // broadcast commands
+  IndexPnpBusResponseCode getFeederAddress(uint8_t (&uuid_in)[12]);
+protected:
+private:
+};
 
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederId(uint8_t (&uuid_out)[12]) {
-    uuid_out[ 0] = 0x12;
-    uuid_out[ 1] = 0x34;
-    uuid_out[ 2] = 0x56;
-    uuid_out[ 3] = 0x78;
-    uuid_out[ 4] = 0x90;
-    uuid_out[ 5] = 0xAB;
-    uuid_out[ 6] = 0xCD;
-    uuid_out[ 7] = 0xEF;
-    uuid_out[ 8] = 0x12;
-    uuid_out[ 9] = 0x34;
-    uuid_out[10] = 0x56;
-    uuid_out[11] = 0x78;
-    return IndexPnpBusResponseCode::ok;
-   }
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::initializeFeeder(uint8_t (&uuid_in)[12]) {
-     return IndexPnpBusResponseCode::ok;
-   }
-
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederVersion(uint8_t (&version_in)[4]) {
-    version_in[0] = 0x01;
-    version_in[1] = 0x00;
-    version_in[2] = 0x00;
-    version_in[3] = 0x00;
-    return IndexPnpBusResponseCode::ok;
-   }
-
-   IndexPnpBusResponseCode IndexPnPFeederAppl::moveFeederForward(uint8_t distance) {
-     return IndexPnpBusResponseCode::ok;
-   }
-
-   IndexPnpBusResponseCode IndexPnPFeederAppl::moveFeederBackward(uint8_t distance) {
-     return IndexPnpBusResponseCode::ok;
-   }
-
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederAddress(uint8_t (&uuid_in)[12]) {
-     return IndexPnpBusResponseCode::wrongUuid;
-   }
+#endif /* INDEXPNPFEEDERAPPL_H_ */

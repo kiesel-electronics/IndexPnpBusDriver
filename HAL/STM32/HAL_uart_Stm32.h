@@ -22,46 +22,55 @@
  *  SOFTWARE.
  *******************************************************************************/
 
+#ifndef HAL_UART_STM32_H_
+#define HAL_UART_STM32_H_
 
- #include "IndexPnPFeederAppl.h"
+#include "stm32_def.h"
+#include <Arduino.h>
+#include "PinNames.h"
+#include "HAL_uart_Interface.h"
 
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederId(uint8_t (&uuid_out)[12]) {
-    uuid_out[ 0] = 0x12;
-    uuid_out[ 1] = 0x34;
-    uuid_out[ 2] = 0x56;
-    uuid_out[ 3] = 0x78;
-    uuid_out[ 4] = 0x90;
-    uuid_out[ 5] = 0xAB;
-    uuid_out[ 6] = 0xCD;
-    uuid_out[ 7] = 0xEF;
-    uuid_out[ 8] = 0x12;
-    uuid_out[ 9] = 0x34;
-    uuid_out[10] = 0x56;
-    uuid_out[11] = 0x78;
-    return IndexPnpBusResponseCode::ok;
-   }
+class HAL_uart_Stm32 : public HAL_uart_Interface {
+  public:
+    HAL_uart_Stm32(USART_TypeDef* _usart, uint32_t _dePin, uint32_t _rePin, int (*_tx_callback)(serial_t *), void (*_rx_callback)(serial_t *));
+    void Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudrate);
+    void setDirectionToTx(void);
+    void setDirectionToRx(void);
+    bool writeByte(uint8_t data);
+    void enableTxInterrupt(void);
+    void disableTxInterrupt(void);
+    void endTx(void);
+    uint32_t getBaudrate(void);
+    uint32_t getTime_us(void);
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::initializeFeeder(uint8_t (&uuid_in)[12]) {
-     return IndexPnpBusResponseCode::ok;
-   }
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederVersion(uint8_t (&version_in)[4]) {
-    version_in[0] = 0x01;
-    version_in[1] = 0x00;
-    version_in[2] = 0x00;
-    version_in[3] = 0x00;
-    return IndexPnpBusResponseCode::ok;
-   }
+    // Interrupt handlers
+    void _rx_complete_irq(serial_t *obj);
+    int _tx_complete_irq(serial_t *obj);
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::moveFeederForward(uint8_t distance) {
-     return IndexPnpBusResponseCode::ok;
-   }
+  protected:
+  private:
+    HAL_uart_cbk_Interface* nextLayer;
+  
+    void (*rx_callback)(serial_t *);
+    int (*tx_callback)(serial_t *);
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::moveFeederBackward(uint8_t distance) {
-     return IndexPnpBusResponseCode::ok;
-   }
 
-   IndexPnpBusResponseCode IndexPnPFeederAppl::getFeederAddress(uint8_t (&uuid_in)[12]) {
-     return IndexPnpBusResponseCode::wrongUuid;
-   }
+    serial_t _serial;
+    unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
+    unsigned char _tx_buffer[SERIAL_TX_BUFFER_SIZE];
+
+    uint32_t baudrate;
+    PinName dePin;
+    PinName rePin;
+    PinName txPin;
+    PinName rxPin;
+
+    IRQn_Type irq;
+
+};
+
+
+
+#endif /* HAL_UART_STM32_H_ */

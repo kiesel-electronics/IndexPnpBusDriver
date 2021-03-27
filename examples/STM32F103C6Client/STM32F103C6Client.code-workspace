@@ -1,0 +1,50 @@
+{
+	"folders": [
+		{
+			"name": "STM32F103C6Client",
+			"path": "."
+		},
+		{
+			"path": "../../"
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"editor.renderWhitespace": "all",
+    "editor.detectIndentation": false,
+    "files.associations": {
+      "usbd_cdc_if.h": "c",
+      "uart.h": "c",
+      "stm32f1xx_hal.h": "c",
+      "stm32f1xx_hal_conf.h": "c",
+      "stm32f1xx_hal_conf_default.h": "c",
+      "stm32_def.h": "c",
+      "stm32f1xx.h": "c",
+      "variant.h": "c",
+      "stm32f1xx_hal_uart.h": "c",
+      "algorithm": "cpp",
+      "array": "cpp",
+      "deque": "cpp",
+      "functional": "cpp",
+      "initializer_list": "cpp",
+      "iterator": "cpp",
+      "list": "cpp",
+      "memory": "cpp",
+      "queue": "cpp",
+      "random": "cpp",
+      "vector": "cpp",
+      "xhash": "cpp",
+      "xlocnum": "cpp",
+      "xmemory": "cpp",
+      "xstring": "cpp",
+      "xutility": "cpp",
+      "*.tcc": "cpp",
+      "string": "cpp",
+      "unordered_map": "cpp",
+      "string_view": "cpp",
+      "type_traits": "cpp",
+      "utility": "cpp",
+      "xlocale": "cpp"
+    }
+	}
+}

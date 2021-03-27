@@ -33,6 +33,7 @@
 
 
 #define INDEX_PNP_BUS_DUMMY_BYTE (0x00)
+#define INDEX_PNP_BUS_BROADCAST  (0xFF)
 
 
 class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
