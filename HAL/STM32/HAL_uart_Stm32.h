@@ -44,7 +44,6 @@ class HAL_uart_Stm32 : public HAL_uart_Interface {
     uint32_t getBaudrate(void);
     uint32_t getTime_us(void);
 
-
     // Interrupt handlers
     void _rx_complete_irq(serial_t *obj);
     int _tx_complete_irq(serial_t *obj);
@@ -55,7 +54,6 @@ class HAL_uart_Stm32 : public HAL_uart_Interface {
   
     void (*rx_callback)(serial_t *);
     int (*tx_callback)(serial_t *);
-
 
     serial_t _serial;
     unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
@@ -68,7 +66,6 @@ class HAL_uart_Stm32 : public HAL_uart_Interface {
     PinName rxPin;
 
     IRQn_Type irq;
-
 };
 
 

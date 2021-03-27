@@ -23,11 +23,11 @@
  *******************************************************************************/
 
 #include <Arduino.h>
-#include <IndexPnpBusClient.h>
-
+#include "stm32yyxx_ll.h"
 #include "HAL_uart_Stm32.h"
 #include "IndexPnpBusClient.h"
 #include "IndexPnPFeederAppl.h"
+
 
 #define RS485_DE_PIN   (PA15)
 #define RS485_RE_PIN   (PA8)
@@ -35,49 +35,37 @@
 int uart1_tx_cbk(serial_t *obj);
 void uart1_rx_cbk(serial_t *obj);
 
-HAL_uart_Stm32 IndexPnpUart_0(USART1, RS485_DE_PIN, RS485_RE_PIN, uart1_tx_cbk, uart1_rx_cbk);
-IndexPnpBusClient IndexPnpBusClient_0;
-IndexPnPFeederAppl Application;
+HAL_uart_Stm32 IndexPnpUart_1(USART1, RS485_DE_PIN, RS485_RE_PIN, uart1_tx_cbk, uart1_rx_cbk);
+IndexPnpBusClient IndexPnpBusClient_1;
+IndexPnPFeederClientAppl IndexPnpBusAppl((uint8_t *)UID_BASE_ADDRESS);
+uint32_t Timer500ms;
 
 int uart1_tx_cbk(serial_t *obj) {
-  return IndexPnpUart_0._tx_complete_irq(obj);
+  return IndexPnpUart_1._tx_complete_irq(obj);
 }
 
 void uart1_rx_cbk(serial_t *obj) {
-  IndexPnpUart_0._rx_complete_irq(obj);
+  IndexPnpUart_1._rx_complete_irq(obj);
 }
-
-uint32_t Timer500ms;
-
-//HardwareSerial Serial2(PA3, PA2);
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   SerialUSB.begin();
   Serial1.begin(9600);
-//  Serial1.print("Hello");
-  //Serial2.begin(19200);
-  //Serial2.print("Hello");
 
-  IndexPnpUart_0.Init(&IndexPnpBusClient_0, 19200);
-  IndexPnpBusClient_0.InitLl(&IndexPnpUart_0, 0x02);
-  IndexPnpBusClient_0.Init(&Application);
+  IndexPnpUart_1.Init(&IndexPnpBusClient_1, 19200);
+  IndexPnpBusClient_1.InitLl(&IndexPnpUart_1, 0x02);
+  IndexPnpBusClient_1.Init(&IndexPnpBusAppl);
 
-  Timer500ms = IndexPnpUart_0.getTime_us();
-  //Timer500ms += 500;
+  Timer500ms = IndexPnpUart_1.getTime_us();
 }
 
 void loop() {
   static uint8_t led_cnt = 0;
 
-  if (Timer500ms < IndexPnpUart_0.getTime_us()){
+  if (Timer500ms < IndexPnpUart_1.getTime_us()){
     Timer500ms += 500000;
     digitalWrite(LED_BUILTIN, led_cnt&0x01);
     led_cnt++;
-
-    //IndexPnpBusClient_0.SendTestFrm();
-    //IndexPnpUart_0.writeByte(0x55);
-    
-//    Serial2.print("H");
   }
 }

@@ -58,8 +58,7 @@ IndexPnpBusPdu::IndexPnpBusPdu() {
    // payload
    uint8_t* msgBuf = payload;
    uint8_t dataLength = payloadLength;
-   while (dataLength--) /* pass through message buffer  */
-   {
+   while (dataLength--) {
      uIndex = crc16Low ^ *msgBuf++; /* calculate the CRC  */
      crc16Low = crc16High ^ crc16LookupHigh[uIndex];
      crc16High = crc16LookupLow[uIndex];
@@ -85,10 +84,10 @@ void IndexPnpBusPdu::buildRequest(IndexPnpBusFunctionCode functionCode, uint8_t 
 }
 
 
-void IndexPnpBusPdu::buildResponse(IndexPnpBusResponseCode responseCode, uint8_t _payloadLength, uint8_t* _payload) {
-  deviceAddress = INDEX_PNP_BUS_HOST_ADDRESS;
+void IndexPnpBusPdu::buildResponse(IndexPnpBusResponseCode responseCode, uint8_t ownAddress, uint8_t _payloadLength, uint8_t* _payload) {
+  deviceAddress = ownAddress;
   payloadLength = _payloadLength + 2;
-  payload[0] = deviceAddress;  // TODO das stimmt was nicht
+  payload[0] = ownAddress;  // TODO das stimmt was nicht
   payload[1] = (uint8_t)responseCode;
   if (_payloadLength > (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE)) {
     _payloadLength = (INDEX_PNP_BUS_PAYLOAD_MAX_SIZE);

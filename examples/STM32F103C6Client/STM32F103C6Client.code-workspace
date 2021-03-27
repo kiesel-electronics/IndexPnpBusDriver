@@ -44,7 +44,9 @@
       "string_view": "cpp",
       "type_traits": "cpp",
       "utility": "cpp",
-      "xlocale": "cpp"
+      "xlocale": "cpp",
+      "atomic": "cpp",
+      "cstring": "cpp"
     }
 	}
 }

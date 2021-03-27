@@ -25,7 +25,6 @@
 #include "IndexPnpBusClient.h"
 
 IndexPnpBusClient::IndexPnpBusClient() {
-  
 };
 
 
@@ -38,7 +37,7 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
   switch((IndexPnpBusFunctionCode)(rxPdu.payload[0])) {
     case IndexPnpBusFunctionCode::getFeederId:
       res = appModule->getFeederId(uuid);
-      txPdu.buildResponse(res, 12, uuid);
+      txPdu.buildResponse(res, deviceAddress, 12, uuid);
       transmitPdu(txPdu);
     break;
 
@@ -46,25 +45,25 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
       // copy uuid from payload
       memcpy(uuid, &rxPdu.payload[1], 12);
       res = appModule->initializeFeeder(uuid);
-      txPdu.buildResponse(res, 0, uuid);
+      txPdu.buildResponse(res, deviceAddress, 0, uuid);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::getVersion:
       res = appModule->getFeederVersion(version);
-      txPdu.buildResponse(res, 4, version);
+      txPdu.buildResponse(res, deviceAddress, 4, version);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::moveFeedForward:
       res = appModule->moveFeederForward(rxPdu.payload[1]);
-      txPdu.buildResponse(res, 0, uuid);
+      txPdu.buildResponse(res, deviceAddress, 0, uuid);
       transmitPdu(txPdu);
     break;
 
     case IndexPnpBusFunctionCode::moveFeedBackward:
       res = appModule->moveFeederBackward(rxPdu.payload[1]);
-      txPdu.buildResponse(res, 0, uuid);
+      txPdu.buildResponse(res, deviceAddress, 0, uuid);
       transmitPdu(txPdu);
     break;
 
@@ -72,19 +71,17 @@ void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
       // copy uuid from payload
       memcpy(uuid, &rxPdu.payload[1], 12);
       res = appModule->getFeederAddress(uuid);
-      txPdu.buildResponse(res, 0, uuid);
       if (res == IndexPnpBusResponseCode::ok) {
+        txPdu.buildResponse(res, deviceAddress, 0, uuid);
         transmitPdu(txPdu);
       }
     break;
   }
-
-   return;
+  return;
 }
 
 
 void IndexPnpBusClient::txFrameComplete(void) {
-
 }
 
 
@@ -95,6 +92,6 @@ void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule) {
 
 void IndexPnpBusClient::SendTestFrm() {
   uint8_t pay[16] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
-      txPdu.buildResponse(IndexPnpBusResponseCode::ok, 8, pay);
-      transmitPdu(txPdu);
+  txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 8, pay);
+  transmitPdu(txPdu);
 }

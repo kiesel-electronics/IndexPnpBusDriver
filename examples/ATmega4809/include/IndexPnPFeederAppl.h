@@ -27,7 +27,7 @@
 
 #include <IndexPnpBusInterface.h>
 
-class IndexPnPFeederAppl : public IndexPnpBusClient_cbk_Interface {
+class IndexPnPFeederClientAppl : public IndexPnpBusClient_cbk_Interface {
 public:
   IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
   IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);

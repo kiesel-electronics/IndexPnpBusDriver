@@ -33,7 +33,7 @@ extern "C" void __cxa_pure_virtual() { while (1); }
 
 HAL_uart_Atmega0 IndexPnpUart_0(&USART0);
 IndexPnpBusClient IndexPnpBusClient_0;
-IndexPnPFeederAppl Application;
+IndexPnPFeederClientAppl Application;
 
 uint32_t Timer500ms;
 

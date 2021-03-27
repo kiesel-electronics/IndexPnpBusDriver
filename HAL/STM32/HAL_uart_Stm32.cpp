@@ -44,8 +44,6 @@ HAL_uart_Stm32::HAL_uart_Stm32(USART_TypeDef* _usart, uint32_t _dePin, uint32_t 
 
 
 void HAL_uart_Stm32::Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudrate) {
-  uint32_t pclk;
-
   this->nextLayer = _nextLayer;
   this->baudrate = _baudrate;
 
