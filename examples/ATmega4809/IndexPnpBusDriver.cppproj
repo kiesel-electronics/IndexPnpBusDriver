@@ -278,7 +278,7 @@
     <Compile Include="include\driver_init.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="include\IndexPnPFeederAppl.h">
+    <Compile Include="include\IndexPnPFeederClientAppl.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="include\port.h">
@@ -317,7 +317,7 @@
     <Compile Include="src\driver_init.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\IndexPnPFeederAppl.cpp">
+    <Compile Include="src\IndexPnPFeederClientAppl.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\protected_io.S">

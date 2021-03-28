@@ -25,16 +25,17 @@
 #include <atmel_start.h>
 #include "HAL_uart_Atmega0.h"
 #include "IndexPnpBusClient.h"
-#include <IndexPnPFeederAppl.h>
+#include <IndexPnPFeederClientAppl.h>
 #include "wiring.h"
 
 extern "C" void __cxa_pure_virtual() { while (1); }
 
+uint8_t version_in[4] = {0x00, 0x00, 0x00, 0x01};
+uint8_t uuid[12] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB};
 
 HAL_uart_Atmega0 IndexPnpUart_0(&USART0);
-IndexPnpBusClient IndexPnpBusClient_0;
-IndexPnPFeederClientAppl Application;
-
+IndexPnpBusClient IndexPnpBusClient_0(uuid, version_in);
+IndexPnPFeederClientAppl IndexPnpBusAppl;
 uint32_t Timer500ms;
 
 int main(void)
@@ -45,28 +46,22 @@ int main(void)
 
     IndexPnpUart_0.Init(&IndexPnpBusClient_0, 19200);
     IndexPnpBusClient_0.InitLl(&IndexPnpUart_0, 0x02);
-    IndexPnpBusClient_0.Init(&Application);
+    IndexPnpBusClient_0.Init(&IndexPnpBusAppl);
 
     Timer500ms = IndexPnpUart_0.getTime_us();
-    Timer500ms += 500;
+
     // Init LED pin
     PORTF_set_pin_dir(5, PORT_DIR_OUT);
     PORTF_set_pin_pull_mode(5, PORT_PULL_OFF);
     PORTF_set_pin_level(5, false);
 
     while (1) {
+      IndexPnpBusClient_0.handler();
       uint32_t current_time_us = IndexPnpUart_0.getTime_us();
       if (current_time_us > Timer500ms ) {
         Timer500ms += 500000;
         PORTF_toggle_pin_level(5);
-
-        
-        //IndexPnpUart_0.writeByte(0x55);
-        
       }
-
-      
-
     }
 }
 

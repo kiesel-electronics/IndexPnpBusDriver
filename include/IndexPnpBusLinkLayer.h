@@ -32,8 +32,9 @@
 
 
 
-#define INDEX_PNP_BUS_DUMMY_BYTE (0x00)
-#define INDEX_PNP_BUS_BROADCAST  (0xFF)
+#define INDEX_PNP_BUS_DUMMY_BYTE      (0x00)
+#define INDEX_PNP_BUS_BROADCAST       (0xFF)
+#define INDEX_PNP_BUS_ERR_DCR_RATIO   (16)
 
 
 class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
@@ -80,10 +81,10 @@ class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
     };
       
     IndexPnpBusPdu txPdu;
-    txFrameStatusType txStatus;
+    IndexPnpBusLinkLayer::txFrameStatusType txStatus;
 
     IndexPnpBusPdu rxPdu;
-    rxFrameStatusType rxStatus;
+    IndexPnpBusLinkLayer::rxFrameStatusType rxStatus;
     uint16_t rxErrorCnt;
     uint16_t rxSuccessCnt;
 };

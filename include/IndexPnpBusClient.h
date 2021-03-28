@@ -30,7 +30,7 @@
 
 class IndexPnpBusClient : public IndexPnpBusLinkLayer {
 public:
-  IndexPnpBusClient(uint8_t* _uuid);
+  IndexPnpBusClient(uint8_t* _uuid, uint8_t* _appVersion);
   void Init(IndexPnpBusClient_cbk_Interface* _appModule);
   void handler(void);
   void SendTestFrm();
@@ -41,6 +41,7 @@ protected:
 
 private:
   uint8_t* uuid;
+  uint8_t* appVersion;
   IndexPnpBusClient_cbk_Interface* appModule;
   bool initialized_flg;
 
@@ -56,7 +57,7 @@ private:
     moveBackward,
     };
 
-  clientStateType state;
+  IndexPnpBusClient::clientStateType state;
 };
 
 

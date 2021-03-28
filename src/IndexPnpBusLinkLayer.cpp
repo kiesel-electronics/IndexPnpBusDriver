@@ -126,8 +126,8 @@ void IndexPnpBusLinkLayer::rxComplete(uint8_t rxByte) {
       if (rxPdu.checkCrc()) {
         // frame is valid
         rxSuccessCnt++;
-        if ((rxSuccessCnt%128) == 0) {
-          // decrease error counter by 1 every 128 successful received frames
+        if ((rxSuccessCnt%INDEX_PNP_BUS_ERR_DCR_RATIO) == 0) {
+          // decrease error counter by 1 every INDEX_PNP_BUS_ERR_DCR_RATIO successful received frames
           if (rxErrorCnt > 0) {
             rxErrorCnt--;
           }
@@ -165,6 +165,7 @@ int IndexPnpBusLinkLayer::transmitPdu() {
     if(rxStatus != rxFrameStatusType::idle){
       // rx frame in progress
       // TODO
+      return -1;
     }
     txStatus = txFrameStatusType::dummy_1;
     uart->setDirectionToRx();

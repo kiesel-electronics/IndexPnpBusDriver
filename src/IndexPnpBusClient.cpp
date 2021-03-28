@@ -25,8 +25,9 @@
 
 #include "IndexPnpBusClient.h"
 
-IndexPnpBusClient::IndexPnpBusClient(uint8_t* _uuid) {
+IndexPnpBusClient::IndexPnpBusClient(uint8_t* _uuid, uint8_t* _appVersion) {
   uuid = _uuid;
+  appVersion = _appVersion;
   initialized_flg = false;
 };
 
@@ -106,12 +107,7 @@ void IndexPnpBusClient::getFeederId() {
 
 void IndexPnpBusClient::getFeederVersion() {
   // this is called from the interrupt, leave as fast as possibel
-  uint8_t version_in[4];
-  version_in[0] = 0x01;
-  version_in[1] = 0x00;
-  version_in[2] = 0x00;
-  version_in[3] = 0x00;
-  txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 4, version_in);
+  txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 4, appVersion);
   transmitPdu();
 }
 
