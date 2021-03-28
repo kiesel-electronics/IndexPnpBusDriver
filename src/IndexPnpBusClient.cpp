@@ -22,67 +22,13 @@
  *  SOFTWARE.
  *******************************************************************************/
 
+
 #include "IndexPnpBusClient.h"
 
-IndexPnpBusClient::IndexPnpBusClient() {
+IndexPnpBusClient::IndexPnpBusClient(uint8_t* _uuid) {
+  uuid = _uuid;
+  initialized_flg = false;
 };
-
-
-void IndexPnpBusClient::receivePdu(IndexPnpBusPdu &rxPdu) {
-  IndexPnpBusPdu txPdu;
-  IndexPnpBusResponseCode res;
-  uint8_t uuid[12];
-  uint8_t version[4];
-
-  switch((IndexPnpBusFunctionCode)(rxPdu.payload[0])) {
-    case IndexPnpBusFunctionCode::getFeederId:
-      res = appModule->getFeederId(uuid);
-      txPdu.buildResponse(res, deviceAddress, 12, uuid);
-      transmitPdu(txPdu);
-    break;
-
-    case IndexPnpBusFunctionCode::initializeFeeder:
-      // copy uuid from payload
-      memcpy(uuid, &rxPdu.payload[1], 12);
-      res = appModule->initializeFeeder(uuid);
-      txPdu.buildResponse(res, deviceAddress, 0, uuid);
-      transmitPdu(txPdu);
-    break;
-
-    case IndexPnpBusFunctionCode::getVersion:
-      res = appModule->getFeederVersion(version);
-      txPdu.buildResponse(res, deviceAddress, 4, version);
-      transmitPdu(txPdu);
-    break;
-
-    case IndexPnpBusFunctionCode::moveFeedForward:
-      res = appModule->moveFeederForward(rxPdu.payload[1]);
-      txPdu.buildResponse(res, deviceAddress, 0, uuid);
-      transmitPdu(txPdu);
-    break;
-
-    case IndexPnpBusFunctionCode::moveFeedBackward:
-      res = appModule->moveFeederBackward(rxPdu.payload[1]);
-      txPdu.buildResponse(res, deviceAddress, 0, uuid);
-      transmitPdu(txPdu);
-    break;
-
-    case IndexPnpBusFunctionCode::getFeederAddress:
-      // copy uuid from payload
-      memcpy(uuid, &rxPdu.payload[1], 12);
-      res = appModule->getFeederAddress(uuid);
-      if (res == IndexPnpBusResponseCode::ok) {
-        txPdu.buildResponse(res, deviceAddress, 0, uuid);
-        transmitPdu(txPdu);
-      }
-    break;
-  }
-  return;
-}
-
-
-void IndexPnpBusClient::txFrameComplete(void) {
-}
 
 
 void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule) {
@@ -90,8 +36,133 @@ void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule) {
 }
 
 
+void IndexPnpBusClient::receivePdu() {
+  IndexPnpBusFunctionCode command = (IndexPnpBusFunctionCode)(rxPdu.payload[0]);
+
+  if (!initialized_flg) {
+    // feeder not initialized
+    if ( (command != IndexPnpBusFunctionCode::getFeederId)
+      && (command != IndexPnpBusFunctionCode::initializeFeeder)
+      && (command != IndexPnpBusFunctionCode::getVersion)
+      && (command != IndexPnpBusFunctionCode::getFeederAddress)
+    ) { // send feeder uninitialized answer
+      txPdu.buildResponse(IndexPnpBusResponseCode::uninitializedFeeder, deviceAddress, 0, uuid);
+      transmitPdu();
+      return;
+    }
+  }
+  // either execute the command or set the status to do it in the handler
+  state = clientStateType::idle;
+  switch(command) {
+    case IndexPnpBusFunctionCode::getFeederId:
+      getFeederId();
+    break;
+
+    case IndexPnpBusFunctionCode::initializeFeeder:
+      state = clientStateType::initFeeder;
+    break;
+
+    case IndexPnpBusFunctionCode::getVersion:
+      getFeederVersion();
+    break;
+
+    case IndexPnpBusFunctionCode::moveFeedForward:
+      state = clientStateType::moveForward;
+    break;
+
+    case IndexPnpBusFunctionCode::moveFeedBackward:
+      state = clientStateType::moveBackward;
+    break;
+
+    case IndexPnpBusFunctionCode::getFeederAddress:
+      getFeederAddress();
+    break;
+  }
+  return;
+}
+
+
+void IndexPnpBusClient::txFrameComplete(void) {
+  // Nothing to do for the client
+}
+
+
 void IndexPnpBusClient::SendTestFrm() {
   uint8_t pay[16] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
   txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 8, pay);
-  transmitPdu(txPdu);
+  transmitPdu();
+}
+
+
+/*******************************************************************************
+ * Handle commands
+ *******************************************************************************/
+void IndexPnpBusClient::getFeederId() {
+  // this is called from the interrupt, leave as fast as possibel
+  // get uuid and send it back
+  txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 12, (uint8_t*)uuid);
+  transmitPdu();
+}
+
+void IndexPnpBusClient::getFeederVersion() {
+  // this is called from the interrupt, leave as fast as possibel
+  uint8_t version_in[4];
+  version_in[0] = 0x01;
+  version_in[1] = 0x00;
+  version_in[2] = 0x00;
+  version_in[3] = 0x00;
+  txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 4, version_in);
+  transmitPdu();
+}
+
+void IndexPnpBusClient::getFeederAddress() {
+  // this is called from the interrupt, leave as fast as possibel
+  // compare uuids
+  int res = memcmp(&rxPdu.payload[1], (uint8_t*)uuid, 12);
+  if (res == 0) {
+    txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 12, (uint8_t*)uuid);
+    transmitPdu();
+  }
+}
+
+
+/*******************************************************************************
+ * Handler function
+ *******************************************************************************/
+void IndexPnpBusClient::handler() {
+  static uint8_t txData[30];
+  uint8_t txDataLength;
+  IndexPnpBusResponseCode res = IndexPnpBusResponseCode::processing;
+  // this is called in the while 1 loop
+  if (state == clientStateType::idle)
+    return;
+
+  switch (state) {
+    case clientStateType::initFeeder:
+      res = appModule->initializeFeeder(&rxPdu.payload[1]);
+      txDataLength = 0;
+      if (res == IndexPnpBusResponseCode::ok) {
+        initialized_flg = true;
+      }
+      break;
+
+    case clientStateType::moveForward:
+      res = appModule->moveFeederForward(rxPdu.payload[1]);
+      txDataLength = 0;
+      break;
+
+    case clientStateType::moveBackward:
+      res = appModule->moveFeederBackward(rxPdu.payload[1]);
+      txDataLength = 0;
+      break;
+
+    default:
+        state = clientStateType::idle;
+      break;
+  }
+  if (res != IndexPnpBusResponseCode::processing) {
+    state = clientStateType::idle;
+    txPdu.buildResponse(res, deviceAddress, txDataLength, txData);
+    transmitPdu();
+  }
 }

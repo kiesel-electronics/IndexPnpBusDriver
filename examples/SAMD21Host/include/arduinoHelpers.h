@@ -22,43 +22,22 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-
-#ifndef INDEXPNPBUSCLIENT_H_
-#define INDEXPNPBUSCLIENT_H_
-
-#include "IndexPnpBusLinkLayer.h"
-
-class IndexPnpBusClient : public IndexPnpBusLinkLayer {
-public:
-  IndexPnpBusClient(uint8_t* _uuid);
-  void Init(IndexPnpBusClient_cbk_Interface* _appModule);
-  void handler(void);
-  void SendTestFrm();
-
-protected:
-  void receivePdu();
-  void txFrameComplete(void);
-
-private:
-  uint8_t* uuid;
-  IndexPnpBusClient_cbk_Interface* appModule;
-  bool initialized_flg;
-
-  void getFeederId(void);
-  void getFeederVersion(void);
-  // broadcast commands
-  void getFeederAddress(void);
-
-  enum class clientStateType {
-    idle,
-    initFeeder,
-    moveForward,
-    moveBackward,
-    };
-
-  clientStateType state;
-};
+#ifndef ARDUINO_HELPERS_H_
+#define ARDUINO_HELPERS_H_
 
 
+#include "Arduino.h"
+#include "string.h"
 
-#endif /* INDEXPNPBUSCLIENT_H_ */
+// #ifdef __cplusplus
+// extern "C"{
+// #endif // __cplusplus
+
+void PrintHex8(uint8_t *data, uint8_t length, Stream *ser);
+void PrintHex16(uint8_t *data, uint8_t length, Stream *ser);
+
+// #ifdef __cplusplus
+// } // extern "C"
+// #endif
+
+#endif  //ARDUINO_HELPERS_H_

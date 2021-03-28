@@ -42,7 +42,7 @@ public:
   int getFeederAddress(uint8_t (&uuid_in)[12]);
 
 protected:
-  void receivePdu(IndexPnpBusPdu &pdu);
+  void receivePdu();
   void txFrameComplete(void);
 
 private:

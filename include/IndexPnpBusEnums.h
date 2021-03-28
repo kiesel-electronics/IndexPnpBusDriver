@@ -32,6 +32,7 @@ enum class IndexPnpBusResponseCode : uint8_t {
   motorFault = 0x02,
   uninitializedFeeder = 0x03,
   unexpectedPayloadSize = 0x04,
+  processing = 0xF0
 };
 
 enum class IndexPnpBusFunctionCode : uint8_t {

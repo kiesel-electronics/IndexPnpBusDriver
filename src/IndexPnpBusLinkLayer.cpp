@@ -134,7 +134,7 @@ void IndexPnpBusLinkLayer::rxComplete(uint8_t rxByte) {
         }
         // forward only frames for this device
         if ((rxPdu.deviceAddress == deviceAddress) || (rxPdu.deviceAddress == INDEX_PNP_BUS_BROADCAST)) {
-          receivePdu(rxPdu);
+          receivePdu();
         }
       } else {
         // CRC error, discard frame
@@ -147,7 +147,7 @@ void IndexPnpBusLinkLayer::rxComplete(uint8_t rxByte) {
 
 
 
-int IndexPnpBusLinkLayer::transmitPdu(IndexPnpBusPdu &pdu) {
+int IndexPnpBusLinkLayer::transmitPdu() {
   // the function calling this method has to make sure, that the 3.5 byte long timeout has passed
   uint32_t current_time_us = uart->getTime_us();
   if (txStatus != txFrameStatusType::idle) {
@@ -156,8 +156,6 @@ int IndexPnpBusLinkLayer::transmitPdu(IndexPnpBusPdu &pdu) {
     return -1;
   }
   
-  // copy PDU
-  txPdu = pdu;
   // calculate crc, init current position
   txPdu.crc = txPdu.calculateCrc16();
   txPdu.currentPosition = 0;

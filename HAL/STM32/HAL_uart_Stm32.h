@@ -40,7 +40,6 @@ class HAL_uart_Stm32 : public HAL_uart_Interface {
     bool writeByte(uint8_t data);
     void enableTxInterrupt(void);
     void disableTxInterrupt(void);
-    void endTx(void);
     uint32_t getBaudrate(void);
     uint32_t getTime_us(void);
 

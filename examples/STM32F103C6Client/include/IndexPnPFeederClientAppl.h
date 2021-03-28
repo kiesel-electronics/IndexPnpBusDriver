@@ -29,18 +29,11 @@
 
 class IndexPnPFeederClientAppl : public IndexPnpBusClient_cbk_Interface {
 public:
-  IndexPnPFeederClientAppl(uint8_t* _uuid);
-  IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
-  IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);
-  IndexPnpBusResponseCode getFeederVersion(uint8_t (&version_in)[4]);
+  IndexPnPFeederClientAppl();
+
+  IndexPnpBusResponseCode initializeFeeder(uint8_t* uuid_in);
   IndexPnpBusResponseCode moveFeederForward(uint8_t distance);
   IndexPnpBusResponseCode moveFeederBackward(uint8_t distance);
-
-  // broadcast commands
-  IndexPnpBusResponseCode getFeederAddress(uint8_t (&uuid_in)[12]);
-protected:
-private:
-  uint8_t* uuid;
 };
 
 

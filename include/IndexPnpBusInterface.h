@@ -30,26 +30,20 @@
 
 class IndexPnpBusClient_cbk_Interface {
 public:
-  virtual IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
-  virtual IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);
-  virtual IndexPnpBusResponseCode getFeederVersion(uint8_t (&version_in)[4]);
-  virtual IndexPnpBusResponseCode moveFeederForward(uint8_t distance);
-  virtual IndexPnpBusResponseCode moveFeederBackward(uint8_t distance);
-
-  // broadcast commands
-  virtual IndexPnpBusResponseCode getFeederAddress(uint8_t (&uuid_in)[12]);
+  virtual IndexPnpBusResponseCode initializeFeeder(uint8_t* uuid_in) = 0;
+  virtual IndexPnpBusResponseCode moveFeederForward(uint8_t distance) = 0;
+  virtual IndexPnpBusResponseCode moveFeederBackward(uint8_t distance) = 0;
 };
 
 class IndexPnpBusHost_cbk_Interface {
   public:
-  virtual void responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in);
-  virtual void responseInitializeFeeder(IndexPnpBusResponseCode responseCode);
-  virtual void responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in);
-  virtual void responseMoveFeederForward(IndexPnpBusResponseCode responseCode);
-  virtual void responseMoveFeederBackward(IndexPnpBusResponseCode responseCode);
-
+  virtual void responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) = 0;
+  virtual void responseInitializeFeeder(IndexPnpBusResponseCode responseCode) = 0;
+  virtual void responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) = 0;
+  virtual void responseMoveFeederForward(IndexPnpBusResponseCode responseCode) = 0;
+  virtual void responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) = 0;
   // broadcast commands
-  virtual void responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress);
+  virtual void responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress) = 0;
 };
 
 

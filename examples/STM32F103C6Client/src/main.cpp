@@ -36,8 +36,8 @@ int uart1_tx_cbk(serial_t *obj);
 void uart1_rx_cbk(serial_t *obj);
 
 HAL_uart_Stm32 IndexPnpUart_1(USART1, RS485_DE_PIN, RS485_RE_PIN, uart1_tx_cbk, uart1_rx_cbk);
-IndexPnpBusClient IndexPnpBusClient_1;
-IndexPnPFeederClientAppl IndexPnpBusAppl((uint8_t *)UID_BASE_ADDRESS);
+IndexPnpBusClient IndexPnpBusClient_1((uint8_t *)UID_BASE_ADDRESS);
+IndexPnPFeederClientAppl IndexPnpBusAppl;
 uint32_t Timer500ms;
 
 int uart1_tx_cbk(serial_t *obj) {
@@ -63,9 +63,12 @@ void setup() {
 void loop() {
   static uint8_t led_cnt = 0;
 
+  IndexPnpBusClient_1.handler();
+
   if (Timer500ms < IndexPnpUart_1.getTime_us()){
     Timer500ms += 500000;
     digitalWrite(LED_BUILTIN, led_cnt&0x01);
     led_cnt++;
   }
+
 }

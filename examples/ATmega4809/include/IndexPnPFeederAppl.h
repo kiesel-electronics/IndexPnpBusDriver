@@ -30,10 +30,10 @@
 class IndexPnPFeederClientAppl : public IndexPnpBusClient_cbk_Interface {
 public:
   IndexPnpBusResponseCode getFeederId(uint8_t (&uuid_out)[12]);
-  IndexPnpBusResponseCode initializeFeeder(uint8_t (&uuid_in)[12]);
+  void initializeFeeder(uint8_t (&uuid_in)[12]);
   IndexPnpBusResponseCode getFeederVersion(uint8_t (&version_in)[4]);
-  IndexPnpBusResponseCode moveFeederForward(uint8_t distance);
-  IndexPnpBusResponseCode moveFeederBackward(uint8_t distance);
+  void moveFeederForward(uint8_t distance);
+  void moveFeederBackward(uint8_t distance);
 
   // broadcast commands
   IndexPnpBusResponseCode getFeederAddress(uint8_t (&uuid_in)[12]);

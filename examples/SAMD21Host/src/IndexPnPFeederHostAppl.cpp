@@ -23,11 +23,14 @@
  *******************************************************************************/
 
  #include "IndexPnPFeederHostAppl.h"
+ #include "arduinoHelpers.h"
+
+
 
 
 void IndexPnPFeederHostAppl::responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) {
-  SerialUSB.print("GetFeederId response: ");
-  SerialUSB.println(HEX, uuid_in[0]);
+  SerialUSB.print("GetFeederId response: 0x");
+  PrintHex16(uuid_in, 12, &SerialUSB);
 }
 
 void IndexPnPFeederHostAppl::responseInitializeFeeder(IndexPnpBusResponseCode responseCode) {
@@ -37,19 +40,21 @@ void IndexPnPFeederHostAppl::responseInitializeFeeder(IndexPnpBusResponseCode re
 
 
 void IndexPnPFeederHostAppl::responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) {
-  SerialUSB.print("Get Feeder version response: ");
+  SerialUSB.print("Get Feeder version response code: ");
   SerialUSB.println((uint8_t)responseCode);
+  SerialUSB.print("Version: ");
+  PrintHex16(version_in, 4, &SerialUSB);
 }
 
 
 void IndexPnPFeederHostAppl::responseMoveFeederForward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder forward response: ");
+  SerialUSB.print("Move Feeder forward response code: ");
   SerialUSB.println((uint8_t)responseCode);
 }
 
 
 void IndexPnPFeederHostAppl::responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder backward response: ");
+  SerialUSB.print("Move Feeder backward response code: ");
   SerialUSB.println((uint8_t)responseCode);
 }
 

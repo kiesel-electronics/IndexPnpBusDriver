@@ -40,22 +40,21 @@ class IndexPnpBusLinkLayer : public HAL_uart_cbk_Interface {
   public:
     void InitLl(HAL_uart_Interface* _uart, uint8_t _deviceAddress);
 
-	  void rxComplete(uint8_t byte);
-	  void txComplete(void);
+    void rxComplete(uint8_t byte);
+    void txComplete(void);
     uint32_t getLastBusActivity_us(void);
     uint16_t getErrorCnt();
 
-    virtual void receivePdu(IndexPnpBusPdu &pdu) = 0;
-    virtual void txFrameComplete(void) = 0;
-    
   protected:
-    int transmitPdu(IndexPnpBusPdu &pdu);
+    virtual void receivePdu() = 0;
+    virtual void txFrameComplete(void) = 0;
+    int transmitPdu();
     uint8_t deviceAddress;
 
     HAL_uart_Interface* uart;
     uint32_t lastBusActivityTimestamp_us;
     uint32_t frame_timeout;
-        
+
     enum class rxFrameStatusType {
       idle,
       deviceAdderss,

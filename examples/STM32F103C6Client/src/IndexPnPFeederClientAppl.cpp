@@ -26,42 +26,18 @@
  #include "IndexPnPFeederClientAppl.h"
 
 
-  IndexPnPFeederClientAppl::IndexPnPFeederClientAppl(uint8_t* _uuid) {
-    uuid = _uuid;
-  }
+IndexPnPFeederClientAppl::IndexPnPFeederClientAppl() {
+}
 
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::getFeederId(uint8_t (&uuid_out)[12]) {
-    // get uuid from hardware reg
-    memcpy(uuid_out, (uint8_t*)uuid, 12);
-    return IndexPnpBusResponseCode::ok;
-  }
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::initializeFeeder(uint8_t* uuid_in) {
+  // init the feeder
+  return IndexPnpBusResponseCode::ok;
+}
 
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::initializeFeeder(uint8_t (&uuid_in)[12]) {
-    return IndexPnpBusResponseCode::ok;
-  }
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederForward(uint8_t distance) {
+  return IndexPnpBusResponseCode::ok;
+}
 
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::getFeederVersion(uint8_t (&version_in)[4]) {
-    version_in[0] = 0x01;
-    version_in[1] = 0x00;
-    version_in[2] = 0x00;
-    version_in[3] = 0x00;
-    return IndexPnpBusResponseCode::ok;
-  }
-
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederForward(uint8_t distance) {
-    return IndexPnpBusResponseCode::ok;
-  }
-
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederBackward(uint8_t distance) {
-    return IndexPnpBusResponseCode::ok;
-  }
-
-  IndexPnpBusResponseCode IndexPnPFeederClientAppl::getFeederAddress(uint8_t (&uuid_in)[12]) {
-    // compare uuids
-    int res = memcmp(uuid_in, (uint8_t*)uuid, 12);
-    if (res == 0) {
-      return IndexPnpBusResponseCode::ok;
-    } else {
-      return IndexPnpBusResponseCode::wrongUuid;
-    }
-  }
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederBackward(uint8_t distance) {
+  return IndexPnpBusResponseCode::ok;
+}
