@@ -51,5 +51,3 @@ jobs:
       #--board=genericSTM32F103C8
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
-          echo Add other actions to build,
-          echo test, and deploy your project.
