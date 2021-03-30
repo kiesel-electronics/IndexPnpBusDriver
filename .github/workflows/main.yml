@@ -21,7 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        example: [examples/SAMD21Host, examples/STM32F103C6Client]    
+        python-version: [3.7]
+        example:
+          - "examples/SAMD21Host"
+          - "examples/STM32F103C6Client"    
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
