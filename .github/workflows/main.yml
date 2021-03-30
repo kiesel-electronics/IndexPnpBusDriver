@@ -24,7 +24,7 @@ jobs:
         python-version: [3.7]
         example:
           - "examples/SAMD21Host"
-          - "examples/STM32F103C6Client"    
+          #- "examples/STM32F103C6Client"    
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -47,7 +47,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade platformio
     - name: Run PlatformIO
-      run: pio ci --board=mzeroUSB --board=genericSTM32F103C8
+      run: pio ci --board=mzeroUSB 
+      #--board=genericSTM32F103C8
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
           echo Add other actions to build,
