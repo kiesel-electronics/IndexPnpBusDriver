@@ -44,7 +44,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade platformio
     - name: Run PlatformIO
-      run: pio ci --board=<ID_1> --board=<ID_2> --board=<ID_N>
+      run: pio ci --board=mzeroUSB --board=genericSTM32F103C8
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
           echo Add other actions to build,
