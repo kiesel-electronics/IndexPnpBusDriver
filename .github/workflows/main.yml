@@ -49,7 +49,7 @@ jobs:
     #- name: Install library dependencies
       #run: pio lib -g install ./
     - name: Run PlatformIO
-      run: pio run -e mzeroUSB -d examples\SAMD21Host
+      run: pio run -e mzeroUSB -d ./examples/SAMD21Host
       #ci --board=mzeroUSB 
       #--board=genericSTM32F103C8
       env:
