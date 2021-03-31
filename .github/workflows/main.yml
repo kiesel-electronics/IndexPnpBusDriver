@@ -19,12 +19,12 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7]
-        example:
-          - "examples/SAMD21Host"
-          #- "examples/STM32F103C6Client"    
+    #strategy:
+    #  matrix:
+    #    python-version: [3.7]
+    #    example:
+    #      - "examples/SAMD21Host"
+    #      #- "examples/STM32F103C6Client"    
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -52,5 +52,5 @@ jobs:
       run: pio run -e mzeroUSB -d ./examples/SAMD21Host
       #ci --board=mzeroUSB 
       #--board=genericSTM32F103C8
-      env:
-        PLATFORMIO_CI_SRC: ${{ matrix.example }}
+      #env:
+      #  PLATFORMIO_CI_SRC: ${{ matrix.example }}
