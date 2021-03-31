@@ -46,10 +46,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-    - name: Install library dependencies
-      run: pio lib -g install ./
+    #- name: Install library dependencies
+      #run: pio lib -g install ./
     - name: Run PlatformIO
-      run: pio ci --board=mzeroUSB 
+      run: pio run -e mzeroUSB -d examples\SAMD21Host
+      #ci --board=mzeroUSB 
       #--board=genericSTM32F103C8
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
