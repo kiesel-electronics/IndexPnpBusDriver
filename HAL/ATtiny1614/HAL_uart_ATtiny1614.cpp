@@ -22,25 +22,23 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#include "HAL_uart_Atmega0.h"
-#include "HAL_config.h"
+#include "HAL_uart_ATtiny1614.h"
 #include <port.h>
 
 
-HAL_uart_Atmega0::HAL_uart_Atmega0(USART_t* _uartCh) {
+HAL_uart_ATtiny1614::HAL_uart_ATtiny1614(USART_t* _uartCh) {
   this->uartCh = _uartCh;
 }
 
 
-void HAL_uart_Atmega0::Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudrate) {
+void HAL_uart_ATtiny1614::Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudrate) {
   this->nextLayer = _nextLayer;
   this->baudrate = _baudrate;
 
   // init direction pin
-  INIT_DIR_PIN_SET_DIR(PORT_DIR_OUT);
-  INIT_DIR_PIN_SET_PULL_MODE(PORT_PULL_OFF);
-  INIT_DIR_PIN_SET_LEVEL(false);
-
+  PORTA_set_pin_dir(7, PORT_DIR_OUT);
+  PORTA_set_pin_pull_mode(7, PORT_PULL_OFF);
+  PORTA_set_pin_level(7, false);
 
   // initialize hardware
   #define INDEX_PNP_USART_BAUD_RATE(BAUD_RATE)  ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)
@@ -64,17 +62,19 @@ void HAL_uart_Atmega0::Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudra
 }
 
 
-void HAL_uart_Atmega0::setDirectionToTx(void) {
-  INIT_DIR_PIN_SET_LEVEL(true);
+void HAL_uart_ATtiny1614::setDirectionToTx(void) {
+  // PORTC_02
+  PORTA_set_pin_level(7, true);
 }
 
 
-void HAL_uart_Atmega0::setDirectionToRx(void) {
-  INIT_DIR_PIN_SET_LEVEL(false);
+void HAL_uart_ATtiny1614::setDirectionToRx(void) {
+  // PORTC_02
+  PORTA_set_pin_level(7, false);
 }
 
 
-bool HAL_uart_Atmega0::writeByte(uint8_t byte) {
+bool HAL_uart_ATtiny1614::writeByte(uint8_t byte) {
   // clear Tx complete ISR
   uartCh->STATUS = USART_TXCIF_bm;
   // send byte
@@ -83,33 +83,33 @@ bool HAL_uart_Atmega0::writeByte(uint8_t byte) {
 }
 
 
-void HAL_uart_Atmega0::enableTxInterrupt(void) {
+void HAL_uart_ATtiny1614::enableTxInterrupt(void) {
   uartCh->CTRLA |= 1 << USART_TXCIE_bp;
 }
 
 
-void HAL_uart_Atmega0::disableTxInterrupt(void) {
+void HAL_uart_ATtiny1614::disableTxInterrupt(void) {
   uartCh->CTRLA &= ~(1 << USART_TXCIE_bp);
 }
 
 
-uint32_t HAL_uart_Atmega0::getBaudrate(void) {
+uint32_t HAL_uart_ATtiny1614::getBaudrate(void) {
   return baudrate;
 }
 
 
-uint32_t HAL_uart_Atmega0::getTime_us(void) {
+uint32_t HAL_uart_ATtiny1614::getTime_us(void) {
   return micros();
 }
 
 
-void HAL_uart_Atmega0::rxIrq(void) {
+void HAL_uart_ATtiny1614::rxIrq(void) {
   uint8_t byte;
   byte = uartCh->RXDATAL;
   nextLayer->rxComplete(byte);
 }
 
 
-void HAL_uart_Atmega0::txIrq(void) {
+void HAL_uart_ATtiny1614::txIrq(void) {
   nextLayer->txComplete();
 }

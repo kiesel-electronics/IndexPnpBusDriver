@@ -26,11 +26,9 @@
 #define CLOCK_CONFIG_H
 
 #ifndef F_CPU
-#define F_CPU (16000000L)
+#define F_CPU 20000000
 #endif
 
 #define CONF_USART_SRC CLK_MAIN
-
-#define MILLIS_USE_TIMERB0
 
 #endif // CLOCK_CONFIG_H

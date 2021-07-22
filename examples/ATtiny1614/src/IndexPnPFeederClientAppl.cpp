@@ -21,16 +21,23 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
- 
-#ifndef CLOCK_CONFIG_H
-#define CLOCK_CONFIG_H
 
-#ifndef F_CPU
-#define F_CPU (16000000L)
-#endif
 
-#define CONF_USART_SRC CLK_MAIN
+ #include "IndexPnPFeederClientAppl.h"
 
-#define MILLIS_USE_TIMERB0
 
-#endif // CLOCK_CONFIG_H
+IndexPnPFeederClientAppl::IndexPnPFeederClientAppl() {
+}
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::initializeFeeder(uint8_t* uuid_in) {
+  // init the feeder
+  return IndexPnpBusResponseCode::ok;
+}
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederForward(uint8_t distance) {
+  return IndexPnpBusResponseCode::ok;
+}
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederBackward(uint8_t distance) {
+  return IndexPnpBusResponseCode::ok;
+}

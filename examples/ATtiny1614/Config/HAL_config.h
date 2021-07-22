@@ -21,16 +21,14 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
- 
-#ifndef CLOCK_CONFIG_H
-#define CLOCK_CONFIG_H
 
-#ifndef F_CPU
-#define F_CPU (16000000L)
-#endif
+#ifndef HAL_CONFIG_H
+#define HAL_CONFIG_H
 
-#define CONF_USART_SRC CLK_MAIN
 
-#define MILLIS_USE_TIMERB0
+#define INIT_DIR_PIN_SET_DIR(x)         PORTA_set_pin_dir(7, x)
+#define INIT_DIR_PIN_SET_PULL_MODE(x)   PORTA_set_pin_pull_mode(7, x)
+#define INIT_DIR_PIN_SET_LEVEL(x)       PORTA_set_pin_level(7, x)
 
-#endif // CLOCK_CONFIG_H
+
+#endif // HAL_CONFIG_H

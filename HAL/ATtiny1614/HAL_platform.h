@@ -21,16 +21,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
- 
-#ifndef CLOCK_CONFIG_H
-#define CLOCK_CONFIG_H
 
-#ifndef F_CPU
-#define F_CPU (16000000L)
-#endif
 
-#define CONF_USART_SRC CLK_MAIN
+#ifndef HAL_PLATFORM_H_
+#define HAL_PLATFORM_H_
 
-#define MILLIS_USE_TIMERB0
+#include "compiler.h"
 
-#endif // CLOCK_CONFIG_H
+#endif /* HAL_PLATFORM_H_ */
