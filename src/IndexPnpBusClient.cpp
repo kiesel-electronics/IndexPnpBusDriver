@@ -57,23 +57,23 @@ void IndexPnpBusClient::receivePdu() {
   switch(command) {
     case IndexPnpBusFunctionCode::getFeederId:
       getFeederId();
-    break;
+      break;
 
     case IndexPnpBusFunctionCode::initializeFeeder:
       state = clientStateType::initFeeder;
-    break;
+      break;
 
     case IndexPnpBusFunctionCode::getVersion:
       getFeederVersion();
-    break;
+      break;
 
     case IndexPnpBusFunctionCode::moveFeedForward:
       state = clientStateType::moveForward;
-    break;
+      break;
 
     case IndexPnpBusFunctionCode::moveFeedBackward:
       state = clientStateType::moveBackward;
-    break;
+      break;
 
     case IndexPnpBusFunctionCode::getFeederAddress:
       getFeederAddress();

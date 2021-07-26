@@ -32,28 +32,28 @@ void IndexPnpBusHost::receivePdu() {
 
   switch((IndexPnpBusFunctionCode)(txPdu.payload[0])) {
     case IndexPnpBusFunctionCode::getFeederId:
-      appModule->responseGetFeederId((IndexPnpBusResponseCode)rxPdu.payload[0], &rxPdu.payload[2]);
-    break;
+      appModule->responseGetFeederId((IndexPnpBusResponseCode)rxPdu.payload[1], &rxPdu.payload[2]);
+      break;
 
     case IndexPnpBusFunctionCode::initializeFeeder:
-      appModule->responseInitializeFeeder((IndexPnpBusResponseCode)rxPdu.payload[0]);
-    break;
+      appModule->responseInitializeFeeder((IndexPnpBusResponseCode)rxPdu.payload[1]);
+      break;
 
     case IndexPnpBusFunctionCode::getVersion:
-      appModule->responseGetFeederVersion((IndexPnpBusResponseCode)rxPdu.payload[0], &rxPdu.payload[2]);
-    break;
+      appModule->responseGetFeederVersion((IndexPnpBusResponseCode)rxPdu.payload[1], &rxPdu.payload[2]);
+      break;
 
     case IndexPnpBusFunctionCode::moveFeedForward:
-      appModule->responseMoveFeederForward((IndexPnpBusResponseCode)rxPdu.payload[0]);
-    break;
+      appModule->responseMoveFeederForward((IndexPnpBusResponseCode)rxPdu.payload[1]);
+      break;
 
     case IndexPnpBusFunctionCode::moveFeedBackward:
-      appModule->responseMoveFeederBackward((IndexPnpBusResponseCode)rxPdu.payload[0]);
-    break;
+      appModule->responseMoveFeederBackward((IndexPnpBusResponseCode)rxPdu.payload[1]);
+      break;
 
     case IndexPnpBusFunctionCode::getFeederAddress:
-      appModule->responseGetFeederAddress((IndexPnpBusResponseCode)rxPdu.payload[0], rxPdu.payload[2]);
-    break;
+      appModule->responseGetFeederAddress((IndexPnpBusResponseCode)rxPdu.payload[1], rxPdu.payload[2]);
+      break;
   }
    return;
 }
