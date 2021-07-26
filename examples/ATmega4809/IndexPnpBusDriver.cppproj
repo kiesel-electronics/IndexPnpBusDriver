@@ -257,6 +257,9 @@
     <Compile Include="Config\clock_config.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Config\HAL_config.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="driver_isr.c">
       <SubType>compile</SubType>
     </Compile>

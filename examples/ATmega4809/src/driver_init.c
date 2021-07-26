@@ -78,7 +78,7 @@ void system_init()
 
 	CLKCTRL_init();
 
-	USART_0_initialization();
+	//USART_0_initialization();
 
 	TIMER_A_initialization();
 
