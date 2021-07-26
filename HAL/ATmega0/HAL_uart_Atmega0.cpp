@@ -40,7 +40,13 @@ void HAL_uart_Atmega0::Init(HAL_uart_cbk_Interface* _nextLayer, uint32_t _baudra
   INIT_DIR_PIN_SET_DIR(PORT_DIR_OUT);
   INIT_DIR_PIN_SET_PULL_MODE(PORT_PULL_OFF);
   INIT_DIR_PIN_SET_LEVEL(false);
-
+  
+  // init Rx pin
+  INIT_RX_PIN_SET_DIR(PORT_DIR_IN);
+  INIT_RX_PIN_SET_PULL_MODE(PORT_PULL_OFF);
+  // init Tx pin
+  INIT_TX_PIN_SET_LEVEL(false);
+  INIT_TX_PIN_SET_DIR(PORT_DIR_OUT);
 
   // initialize hardware
   #define INDEX_PNP_USART_BAUD_RATE(BAUD_RATE)  ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)

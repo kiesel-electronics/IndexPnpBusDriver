@@ -30,5 +30,10 @@
 #define INIT_DIR_PIN_SET_PULL_MODE(x)   PORTA_set_pin_pull_mode(7, x)
 #define INIT_DIR_PIN_SET_LEVEL(x)       PORTA_set_pin_level(7, x)
 
+#define INIT_RX_PIN_SET_DIR(x)          PORTB_set_pin_dir(3, x);
+#define INIT_RX_PIN_SET_PULL_MODE(x)    PORTB_set_pin_pull_mode(3, x);
+
+#define INIT_TX_PIN_SET_LEVEL(x)        PORTB_set_pin_level(2, x);
+#define INIT_TX_PIN_SET_DIR(x)          PORTB_set_pin_dir(2, x);
 
 #endif // HAL_CONFIG_H
