@@ -52,7 +52,6 @@ void uart1_rx_cbk(serial_t *obj) {
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   SerialUSB.begin();
-  Serial1.begin(9600);
 
   IndexPnpUart_1.Init(&IndexPnpBusClient_1, 19200);
   IndexPnpBusClient_1.InitLl(&IndexPnpUart_1, 0x02);

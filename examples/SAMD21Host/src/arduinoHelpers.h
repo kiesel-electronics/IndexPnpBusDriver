@@ -34,7 +34,9 @@
 // #endif // __cplusplus
 
 void PrintHex8(uint8_t *data, uint8_t length, Stream *ser);
-void PrintHex16(uint8_t *data, uint8_t length, Stream *ser);
+void PrintHex16(uint8_t *data, uint8_t length, Stream *ser, boolean add_whitespace);
+
+void conv_hex_to_uint8(char *hex, uint8_t *bytes, uint8_t byte_num);
 
 // #ifdef __cplusplus
 // } // extern "C"

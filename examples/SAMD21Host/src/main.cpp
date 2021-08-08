@@ -23,93 +23,225 @@
  *******************************************************************************/
 
 #include <Arduino.h>
-#include <IndexPnpBusHost.h>
+#include "gcodeParser.h"
+#include "IndexPnpBusHost.h"
 
 #include "HAL_uart_SAMD21G.h"
-#include "IndexPnpBusClient.h"
 #include "IndexPnPFeederHostAppl.h"
-
-#define RS485_RX_PIN    ((uint8_t)12)
-#define RS485_TX_PIN    ((uint8_t)10)
-#define RS485_DIR_PIN   ((uint8_t)2)
-#define GCLK_FREQUENCY  (SystemCoreClock)
+#include "arduinoHelpers.h"
+#include "project_config.h"
 
 
-HAL_uart_SAMD21G IndexPnpUart_0(SERCOM1, RS485_RX_PIN, RS485_TX_PIN, SERCOM_RX_PAD_3, UART_TX_PAD_2, RS485_DIR_PIN);
+
+HAL_uart_SAMD21G IndexPnpUart_0(SERCOM0, RS485_1_RX_PIN, RS485_1_TX_PIN, SERCOM_RX_PAD_3, UART_TX_PAD_2, RS485_1_DIR_PIN);
 IndexPnpBusHost IndexPnpBusHost_0;
 IndexPnPFeederHostAppl HostApplication;
 
-void SERCOM1_Handler() {
+gcodeParser parser(&SerialUSB, '\n');
+void cmd(uint8_t num_params, char** params);
+
+void getFeederId(uint8_t num_params, char** params);
+void getFeederVersion(uint8_t num_params, char** params);
+void getFeederAddress(uint8_t num_params, char** params);
+void initFeeder(uint8_t num_params, char** params);
+void moveFeederForward(uint8_t num_params, char** params);
+void moveFeederBackward(uint8_t num_params, char** params);
+void setUuid(uint8_t num_params, char** params);
+void setParam(uint8_t num_params, char** params);
+void getParam(uint8_t num_params, char** params);
+
+unsigned long TaskTimer;
+unsigned long Task100msCnt;
+unsigned long Task1000msCnt;
+
+
+void setup() {
+  // write your initialization code here
+  SerialUSB.begin(9600);
+  //while(!SerialUSB.available()){}
+
+  parser.RegisterCommand("M134", &cmd);
+
+  parser.RegisterCommand("M200", &getFeederId);
+  parser.RegisterCommand("M201", &getFeederVersion);
+  parser.RegisterCommand("M202", &getFeederAddress);
+  parser.RegisterCommand("M203", &initFeeder);
+  parser.RegisterCommand("M204", &moveFeederForward);
+  parser.RegisterCommand("M205", &moveFeederBackward);
+  parser.RegisterCommand("M206", &setUuid);
+  parser.RegisterCommand("M207", &setParam);
+  parser.RegisterCommand("M208", &getParam);
+
+  // Init
+  IndexPnpUart_0.Init(&IndexPnpBusHost_0, GCLK_FREQUENCY, 19200);
+  IndexPnpBusHost_0.InitLl(&IndexPnpUart_0, 0x00);
+  IndexPnpBusHost_0.Init(&HostApplication);
+
+  HostApplication.Init(RS485_1_TX_LED, RS485_1_RX_LED);
+
+  //
+
+  // Init Task timer variables
+  TaskTimer = millis();
+  Task100msCnt = TaskTimer;
+  Task1000msCnt = TaskTimer;
+}
+
+void loop() {
+  // get time
+  TaskTimer = millis();
+
+  // 100ms Task
+  if (TaskTimer - Task100msCnt >= 100) {
+    Task100msCnt += 100;
+  }
+
+  // 1000ms Task
+  if (TaskTimer - Task1000msCnt >= 1000) {
+    Task1000msCnt += 1000;
+  }
+
+  // write your code here
+  parser.Handler();
+  HostApplication.Handler();
+}
+
+
+void SERCOM0_Handler() {
   IndexPnpUart_0.IrqHandler();
 }
 
 
-uint32_t timer500ms;
-
-void setup() {
-  // put your setup code here, to run once:
-
-  Serial.println();
-  SerialUSB.begin(9600);
-
-  IndexPnpUart_0.Init(&IndexPnpBusHost_0, GCLK_FREQUENCY, 19200);
-  IndexPnpBusHost_0.InitLl(&IndexPnpUart_0, 0x00);
-  IndexPnpBusHost_0.Init(&HostApplication);
-  timer500ms = millis();
-
+void getFeederId(uint8_t num_params, char** params) {
+  if (num_params >= 1){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    IndexPnpBusHost_0.getFeederId(feederId);
+    //SerialUSB.println("Get feeder ID!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
 }
 
-void loop() {
-  uint8_t uuid_in[12] = {0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78};
-  static uint8_t led_cnt = 0;
-  static uint8_t frm_cnt = 0;
-  // put your main code here, to run repeatedly:
-  //delay(1000);
-  if(SerialUSB.available()) {
-    int read = SerialUSB.read();
-    char rec = read & 0xFF;
-    SerialUSB.println(frm_cnt);
 
-    switch (rec) {
-      case '1':
-        SerialUSB.println("Send getFeederId");
-        IndexPnpBusHost_0.getFeederId(0x02);
-        break;
-      case '2':
-        SerialUSB.println("Send initializeFeeder");
-        IndexPnpBusHost_0.initializeFeeder(0x02, uuid_in);
-        break;
-      case '3':
-        SerialUSB.println("Send getFeederVersion");
-        IndexPnpBusHost_0.getFeederVersion(0x02);
-        break;
-      case '4':
-        SerialUSB.println("Send moveFeederForward");
-        IndexPnpBusHost_0.moveFeederForward(0x02, 8);
-        break;
-      case '5':
-        SerialUSB.println("Send moveFeederBackward");
-        IndexPnpBusHost_0.moveFeederBackward(0x02, 8);
-        break;
-      case 'A':
-        SerialUSB.println("Send getFeederAddress");
-        IndexPnpBusHost_0.getFeederAddress(uuid_in);
-        break;
+void getFeederVersion(uint8_t num_params, char** params) {
+  if (num_params >= 1){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    IndexPnpBusHost_0.getFeederVersion(feederId);
+    //SerialUSB.println("Get feeder Version!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
 
-        
+
+void getFeederAddress(uint8_t num_params, char** params) {
+  if (num_params >= 1){
+    char uuid_hex[24];
+    uint8_t uuid_bytes[12];
+    // convert uuid
+    for (uint8_t  i=0; i<24; i++){
+      uuid_hex[i] = params[1][23-i];
     }
-
-    frm_cnt++;
+    conv_hex_to_uint8(uuid_hex, uuid_bytes, 12);
+    IndexPnpBusHost_0.getFeederAddress(uuid_bytes);
+    //SerialUSB.println("Get feeder Address!");
+  } else {
+    SerialUSB.println("Parameter missing!");
   }
-  
-  if (timer500ms < millis()){
-    timer500ms += 500;
-    digitalWrite(LED_BUILTIN, led_cnt&0x01);
-    led_cnt++;
+}
+
+
+void initFeeder(uint8_t num_params, char** params) {
+  if (num_params >= 2){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    uint8_t uuid_in[12];
+    memcpy(uuid_in, params[1], 12);
+    IndexPnpBusHost_0.initializeFeeder(feederId, uuid_in);
+    //SerialUSB.println("Init feeder!");
+  } else {
+    SerialUSB.println("Parameter missing!");
   }
+}
 
 
-  //IndexPnpBusHost_0.initializeFeeder(0x04, uuid_in);
+void moveFeederForward(uint8_t num_params, char** params) {
+  if (num_params >= 2){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    int distance = atoi(params[1]);
+    IndexPnpBusHost_0.moveFeederForward(feederId, distance);
+    //SerialUSB.println("Move feeder forward!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
 
-  
-} 
+
+void moveFeederBackward(uint8_t num_params, char** params) {
+  if (num_params >= 2){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    int distance = atoi(params[1]);
+    IndexPnpBusHost_0.moveFeederBackward(feederId, distance);
+    //SerialUSB.println("Move feeder backward!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
+
+
+void setUuid(uint8_t num_params, char** params) {
+  if (num_params >= 2){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    char uuid_hex[24];
+    uint8_t uuid_bytes[12];
+    // convert uuid
+    for (uint8_t  i=0; i<24; i++){
+      uuid_hex[i] = params[1][23-i];
+    }
+    conv_hex_to_uint8(uuid_hex, uuid_bytes, 12);
+    IndexPnpBusHost_0.setUuid(feederId, uuid_bytes);
+    //SerialUSB.println("Set uuid!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
+
+
+void setParam(uint8_t num_params, char** params) {
+  if (num_params >= 3){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    int paramAddr = atoi(params[1]);
+    int value = atoi(params[2]);
+    IndexPnpBusHost_0.setParam(feederId, paramAddr, value);
+    //SerialUSB.println("Set parameter!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
+
+
+void getParam(uint8_t num_params, char** params) {
+  if (num_params >= 1){
+    //SerialUSB.println(params[0]);
+    int feederId = atoi(params[0]);
+    int paramAddr = atoi(params[1]);
+    IndexPnpBusHost_0.getParam(feederId, paramAddr);
+    //SerialUSB.println("Set parameter!");
+  } else {
+    SerialUSB.println("Parameter missing!");
+  }
+}
+
+
+void cmd(uint8_t num_params, char** params){
+
+  for (int i = 0; i < num_params; i++) {
+    SerialUSB.println(params[i]);
+  }
+}

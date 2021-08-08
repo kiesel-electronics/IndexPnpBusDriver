@@ -34,6 +34,12 @@ public:
   IndexPnpBusResponseCode initializeFeeder(uint8_t* uuid_in);
   IndexPnpBusResponseCode moveFeederForward(uint8_t distance);
   IndexPnpBusResponseCode moveFeederBackward(uint8_t distance);
+  IndexPnpBusResponseCode setUuid(uint8_t* uuid_in);
+  IndexPnpBusResponseCode setParam(uint8_t paramAddr, uint8_t value);
+  IndexPnpBusResponseCode getParam(uint8_t paramAddr, uint8_t *txData);
+  // led triggers
+  void txLedTrigger();
+  void rxLedTrigger();
 };
 
 

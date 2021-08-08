@@ -39,6 +39,7 @@ void IndexPnpBusClient::Init(IndexPnpBusClient_cbk_Interface* _appModule) {
 
 void IndexPnpBusClient::receivePdu() {
   IndexPnpBusFunctionCode command = (IndexPnpBusFunctionCode)(rxPdu.payload[0]);
+  appModule->rxLedTrigger();
 
   if (!initialized_flg) {
     // feeder not initialized
@@ -46,8 +47,12 @@ void IndexPnpBusClient::receivePdu() {
       && (command != IndexPnpBusFunctionCode::initializeFeeder)
       && (command != IndexPnpBusFunctionCode::getVersion)
       && (command != IndexPnpBusFunctionCode::getFeederAddress)
+      && (command != IndexPnpBusFunctionCode::setUuid)
+      && (command != IndexPnpBusFunctionCode::setParam)
+      && (command != IndexPnpBusFunctionCode::getParam)
     ) { // send feeder uninitialized answer
       txPdu.buildResponse(IndexPnpBusResponseCode::uninitializedFeeder, deviceAddress, 0, uuid);
+      appModule->txLedTrigger();
       transmitPdu();
       return;
     }
@@ -74,10 +79,22 @@ void IndexPnpBusClient::receivePdu() {
     case IndexPnpBusFunctionCode::moveFeedBackward:
       state = clientStateType::moveBackward;
       break;
+    
+    case IndexPnpBusFunctionCode::setUuid:
+      state = clientStateType::setUuid;
+      break;
+
+    case IndexPnpBusFunctionCode::setParam:
+      state = clientStateType::setParam;
+      break;
+
+    case IndexPnpBusFunctionCode::getParam:
+      state = clientStateType::getParam;
+      break;
 
     case IndexPnpBusFunctionCode::getFeederAddress:
       getFeederAddress();
-    break;
+      break;
   }
   return;
 }
@@ -91,6 +108,7 @@ void IndexPnpBusClient::txFrameComplete(void) {
 void IndexPnpBusClient::SendTestFrm() {
   uint8_t pay[16] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
   txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 8, pay);
+  appModule->txLedTrigger();
   transmitPdu();
 }
 
@@ -99,24 +117,27 @@ void IndexPnpBusClient::SendTestFrm() {
  * Handle commands
  *******************************************************************************/
 void IndexPnpBusClient::getFeederId() {
-  // this is called from the interrupt, leave as fast as possibel
+  // this is called from the interrupt, leave as fast as possible
   // get uuid and send it back
   txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 12, (uint8_t*)uuid);
+  appModule->txLedTrigger();
   transmitPdu();
 }
 
 void IndexPnpBusClient::getFeederVersion() {
-  // this is called from the interrupt, leave as fast as possibel
+  // this is called from the interrupt, leave as fast as possible
   txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 4, appVersion);
+  appModule->txLedTrigger();
   transmitPdu();
 }
 
 void IndexPnpBusClient::getFeederAddress() {
-  // this is called from the interrupt, leave as fast as possibel
+  // this is called from the interrupt, leave as fast as possible
   // compare uuids
   int res = memcmp(&rxPdu.payload[1], (uint8_t*)uuid, 12);
   if (res == 0) {
     txPdu.buildResponse(IndexPnpBusResponseCode::ok, deviceAddress, 12, (uint8_t*)uuid);
+    appModule->txLedTrigger();
     transmitPdu();
   }
 }
@@ -152,13 +173,29 @@ void IndexPnpBusClient::handler() {
       txDataLength = 0;
       break;
 
+    case clientStateType::setUuid:
+      res = appModule->setUuid(&rxPdu.payload[1]);
+      txDataLength = 0;
+      break;
+
+    case clientStateType::setParam:
+      res = appModule->setParam(rxPdu.payload[1], rxPdu.payload[2]);
+      txDataLength = 0;
+      break;
+
+    case clientStateType::getParam:
+      res = appModule->getParam(rxPdu.payload[1], txData);
+      txDataLength = 1;
+      break;
+
     default:
-        state = clientStateType::idle;
+      state = clientStateType::idle;
       break;
   }
   if (res != IndexPnpBusResponseCode::processing) {
     state = clientStateType::idle;
     txPdu.buildResponse(res, deviceAddress, txDataLength, txData);
+    appModule->txLedTrigger();
     transmitPdu();
   }
 }

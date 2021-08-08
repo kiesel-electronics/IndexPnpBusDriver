@@ -22,45 +22,113 @@
  *  SOFTWARE.
  *******************************************************************************/
 
- #include "IndexPnPFeederHostAppl.h"
- #include "arduinoHelpers.h"
+#include "IndexPnPFeederHostAppl.h"
+#include "arduinoHelpers.h"
+#include "project_config.h"
 
 
-
-
-void IndexPnPFeederHostAppl::responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) {
-  SerialUSB.print("GetFeederId response: 0x");
-  PrintHex16(uuid_in, 12, &SerialUSB);
+ void IndexPnPFeederHostAppl::Init(uint8_t _tx_led_pin, uint8_t _rx_led_pin) {
+  txLedTimer = millis();
+  rxLedTimer = txLedTimer;
+  tx_led_pin = _tx_led_pin;
+  rx_led_pin = _rx_led_pin;
+  pinMode(tx_led_pin, OUTPUT);
+  pinMode(rx_led_pin, OUTPUT);
+  digitalWrite(tx_led_pin, HIGH);
+  digitalWrite(rx_led_pin, HIGH);
 }
 
+
+void IndexPnPFeederHostAppl::Handler() {
+  noInterrupts();
+  unsigned long timer = millis();
+  if (timer - txLedTimer >= RS485_LED_PULSE_MS) {
+    digitalWrite(tx_led_pin, HIGH);
+  }
+  if (timer - rxLedTimer >= RS485_LED_PULSE_MS) {
+    digitalWrite(rx_led_pin, HIGH);
+  }
+  interrupts();
+}
+
+
+// led triggers
+void IndexPnPFeederHostAppl::txLedTrigger() {
+  txLedTimer = millis();
+  digitalWrite(tx_led_pin, LOW);
+}
+
+
+void IndexPnPFeederHostAppl::rxLedTrigger() {
+  rxLedTimer = millis();
+  digitalWrite(rx_led_pin, LOW);
+}
+
+
+// command responses
+void IndexPnPFeederHostAppl::responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in) {
+  uint8_t uuid_conv[12];
+  for (int i=0; i<12; i++) {
+    uuid_conv[i] = uuid_in[11-i];
+  }
+  sendResponse(responseCode, false);
+  PrintHex16(uuid_conv, 12, &SerialUSB, false);
+}
+
+
 void IndexPnPFeederHostAppl::responseInitializeFeeder(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Init Feeder response: ");
-  SerialUSB.println((uint8_t)responseCode);
+   sendResponse(responseCode, true);
 }
 
 
 void IndexPnPFeederHostAppl::responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) {
-  SerialUSB.print("Get Feeder version response code: ");
-  SerialUSB.println((uint8_t)responseCode);
-  SerialUSB.print("Version: ");
-  PrintHex16(version_in, 4, &SerialUSB);
+  sendResponse(responseCode, false);
+  PrintHex16(version_in, 4, &SerialUSB, true);
 }
 
 
 void IndexPnPFeederHostAppl::responseMoveFeederForward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder forward response code: ");
-  SerialUSB.println((uint8_t)responseCode);
+   sendResponse(responseCode, true);
 }
 
 
 void IndexPnPFeederHostAppl::responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) {
-  SerialUSB.print("Move Feeder backward response code: ");
-  SerialUSB.println((uint8_t)responseCode);
+   sendResponse(responseCode, true);
 }
+
+
+void IndexPnPFeederHostAppl::responseSetUuid(IndexPnpBusResponseCode responseCode) {
+   sendResponse(responseCode, true);
+}
+
+
+void IndexPnPFeederHostAppl::responseSetParam(IndexPnpBusResponseCode responseCode) {
+   sendResponse(responseCode, true);
+}
+
+
+void IndexPnPFeederHostAppl::responseGetParam(IndexPnpBusResponseCode responseCode, uint8_t value) {
+   sendResponse(responseCode, false);
+   SerialUSB.println(value);
+ }
+
 
 // broadcast commands
 void IndexPnPFeederHostAppl::responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress) {
-  SerialUSB.print("Get Feeder address response: ");
-  SerialUSB.println((uint8_t)responseCode);
+  sendResponse(responseCode, false);
+  SerialUSB.println(feederAddress);
 }
 
+
+void IndexPnPFeederHostAppl::sendResponse(IndexPnpBusResponseCode responseCode, bool addprintln) {
+  if (responseCode == IndexPnpBusResponseCode::ok) {
+    if (addprintln) {
+      SerialUSB.println("ok");
+    } else {
+      SerialUSB.print("ok ");
+    }
+  } else {
+    SerialUSB.print("error ");
+    SerialUSB.println((uint8_t)responseCode);
+  }
+}

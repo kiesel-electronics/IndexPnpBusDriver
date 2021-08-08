@@ -41,3 +41,22 @@ IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederForward(uint8_t dist
 IndexPnpBusResponseCode IndexPnPFeederClientAppl::moveFeederBackward(uint8_t distance) {
   return IndexPnpBusResponseCode::ok;
 }
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::setUuid(uint8_t* uuid_in) {
+  return IndexPnpBusResponseCode::ok;
+}
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::setParam(uint8_t paramAddr, uint8_t value) {
+  return IndexPnpBusResponseCode::ok;
+}
+
+IndexPnpBusResponseCode IndexPnPFeederClientAppl::getParam(uint8_t paramAddr, uint8_t *txData) {
+  return IndexPnpBusResponseCode::ok;
+}
+
+// led triggers
+void IndexPnPFeederClientAppl::txLedTrigger() {
+}
+
+void IndexPnPFeederClientAppl::rxLedTrigger() {
+}

@@ -33,6 +33,12 @@ public:
   virtual IndexPnpBusResponseCode initializeFeeder(uint8_t* uuid_in) = 0;
   virtual IndexPnpBusResponseCode moveFeederForward(uint8_t distance) = 0;
   virtual IndexPnpBusResponseCode moveFeederBackward(uint8_t distance) = 0;
+  virtual IndexPnpBusResponseCode setUuid(uint8_t* uuid_in) = 0;
+  virtual IndexPnpBusResponseCode setParam(uint8_t paramAddr, uint8_t value) = 0;
+  virtual IndexPnpBusResponseCode getParam(uint8_t paramAddr, uint8_t *txData) = 0;
+  // led triggers
+  virtual void txLedTrigger() = 0;
+  virtual void rxLedTrigger() = 0;  
 };
 
 class IndexPnpBusHost_cbk_Interface {
@@ -42,8 +48,14 @@ class IndexPnpBusHost_cbk_Interface {
   virtual void responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in) = 0;
   virtual void responseMoveFeederForward(IndexPnpBusResponseCode responseCode) = 0;
   virtual void responseMoveFeederBackward(IndexPnpBusResponseCode responseCode) = 0;
+  virtual void responseSetUuid(IndexPnpBusResponseCode responseCode) = 0;
+  virtual void responseSetParam(IndexPnpBusResponseCode responseCode) = 0;
+  virtual void responseGetParam(IndexPnpBusResponseCode responseCode, uint8_t value) = 0;
   // broadcast commands
   virtual void responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress) = 0;
+  // led triggers
+  virtual void txLedTrigger() = 0;
+  virtual void rxLedTrigger() = 0;
 };
 
 

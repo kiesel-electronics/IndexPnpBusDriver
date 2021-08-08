@@ -38,6 +38,10 @@ public:
   int getFeederVersion(uint8_t feederAddress);
   int moveFeederForward(uint8_t feederAddress, uint8_t distance);
   int moveFeederBackward(uint8_t feederAddress, uint8_t distance);
+  int setUuid(uint8_t feederAddress, uint8_t* uuid_in);
+  int setParam(uint8_t feederAddress, uint8_t paramAddr, uint8_t value);
+  int getParam(uint8_t feederAddress, uint8_t paramAddr);
+
   // broadcast commands
   int getFeederAddress(uint8_t (&uuid_in)[12]);
 

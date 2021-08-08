@@ -32,6 +32,7 @@ enum class IndexPnpBusResponseCode : uint8_t {
   motorFault = 0x02,
   uninitializedFeeder = 0x03,
   unexpectedPayloadSize = 0x04,
+  unsupported = 0x05,
   processing = 0xF0
 };
 
@@ -41,6 +42,9 @@ enum class IndexPnpBusFunctionCode : uint8_t {
   getVersion = 0x03,
   moveFeedForward = 0x04,
   moveFeedBackward = 0x05,
+  setUuid = 0x06,
+  setParam = 0x07,
+  getParam = 0x08,
   getFeederAddress = 0xA0,
 };
 

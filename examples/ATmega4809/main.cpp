@@ -36,6 +36,9 @@ uint8_t uuid[12] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 
 HAL_uart_Atmega0 IndexPnpUart_0(&USART0);
 IndexPnpBusClient IndexPnpBusClient_0(uuid, version_in);
 IndexPnPFeederClientAppl IndexPnpBusAppl;
+
+uint8_t position = 0x02;
+
 uint32_t Timer500ms;
 
 int main(void)
@@ -45,7 +48,7 @@ int main(void)
     init();
 
     IndexPnpUart_0.Init(&IndexPnpBusClient_0, 19200);
-    IndexPnpBusClient_0.InitLl(&IndexPnpUart_0, 0x02);
+    IndexPnpBusClient_0.InitLl(&IndexPnpUart_0, position);
     IndexPnpBusClient_0.Init(&IndexPnpBusAppl);
 
     Timer500ms = IndexPnpUart_0.getTime_us();

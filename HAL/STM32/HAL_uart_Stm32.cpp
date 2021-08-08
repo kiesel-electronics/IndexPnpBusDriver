@@ -79,7 +79,7 @@ bool HAL_uart_Stm32::writeByte(uint8_t byte) {
   _serial.tx_head = i;
 
   if (!serial_tx_active(&_serial)) {
-    uart_attach_tx_callback(&_serial, tx_callback);
+    uart_attach_tx_callback(&_serial, tx_callback, 1);
     return true;
   } else {
     return false;

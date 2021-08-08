@@ -29,6 +29,7 @@ IndexPnpBusHost::IndexPnpBusHost() {
 };
 
 void IndexPnpBusHost::receivePdu() {
+  appModule->rxLedTrigger();
 
   switch((IndexPnpBusFunctionCode)(txPdu.payload[0])) {
     case IndexPnpBusFunctionCode::getFeederId:
@@ -51,11 +52,23 @@ void IndexPnpBusHost::receivePdu() {
       appModule->responseMoveFeederBackward((IndexPnpBusResponseCode)rxPdu.payload[1]);
       break;
 
+    case IndexPnpBusFunctionCode::setUuid:
+      appModule->responseSetUuid((IndexPnpBusResponseCode)rxPdu.payload[1]);
+      break;
+
+    case IndexPnpBusFunctionCode::setParam:
+      appModule->responseSetParam((IndexPnpBusResponseCode)rxPdu.payload[1]);
+      break;
+
+    case IndexPnpBusFunctionCode::getParam:
+      appModule->responseGetParam((IndexPnpBusResponseCode)rxPdu.payload[1], rxPdu.payload[2]);
+      break;
+
     case IndexPnpBusFunctionCode::getFeederAddress:
-      appModule->responseGetFeederAddress((IndexPnpBusResponseCode)rxPdu.payload[1], rxPdu.payload[2]);
+      appModule->responseGetFeederAddress((IndexPnpBusResponseCode)rxPdu.payload[1], rxPdu.payload[0]);
       break;
   }
-   return;
+  return;
 }
 
 
@@ -63,6 +76,7 @@ int IndexPnpBusHost::getFeederId(uint8_t feederAddress) {
   txPdu.deviceAddress = feederAddress;
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::getFeederId;
   txPdu.payloadLength = 1;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
 
@@ -71,6 +85,7 @@ int IndexPnpBusHost::initializeFeeder(uint8_t feederAddress, uint8_t (&uuid_in)[
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::initializeFeeder;
   memcpy(txPdu.payload+1, uuid_in, 12);
   txPdu.payloadLength = 13;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
 
@@ -78,6 +93,7 @@ int IndexPnpBusHost::getFeederVersion(uint8_t feederAddress) {
   txPdu.deviceAddress = feederAddress;
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::getVersion;
   txPdu.payloadLength = 1;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
 
@@ -86,6 +102,7 @@ int IndexPnpBusHost::moveFeederForward(uint8_t feederAddress, uint8_t distance) 
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::moveFeedForward;
   txPdu.payload[1] = distance; 
   txPdu.payloadLength = 2;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
 
@@ -94,8 +111,39 @@ int IndexPnpBusHost::moveFeederBackward(uint8_t feederAddress, uint8_t distance)
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::moveFeedBackward;
   txPdu.payload[1] = distance;
   txPdu.payloadLength = 2;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
+
+int IndexPnpBusHost::setUuid(uint8_t feederAddress, uint8_t* uuid_in) {
+  txPdu.deviceAddress = feederAddress;
+  txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::setUuid;
+  memcpy(txPdu.payload+1, uuid_in, 12);
+  txPdu.payloadLength = 13;
+  appModule->txLedTrigger();
+  return transmitPdu();  
+}
+
+int IndexPnpBusHost::setParam(uint8_t feederAddress, uint8_t paramAddr, uint8_t value) {
+  txPdu.deviceAddress = feederAddress;
+  txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::setParam;
+  txPdu.payload[1] = paramAddr; 
+  txPdu.payload[2] = value; 
+  txPdu.payloadLength = 3;
+  appModule->txLedTrigger();
+  return transmitPdu();
+}
+
+
+int IndexPnpBusHost::getParam(uint8_t feederAddress, uint8_t paramAddr) {
+  txPdu.deviceAddress = feederAddress;
+  txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::getParam;
+  txPdu.payload[1] = paramAddr;
+  txPdu.payloadLength = 2;
+  appModule->txLedTrigger();
+  return transmitPdu();
+}
+
 
 // broadcast commands
 int IndexPnpBusHost::getFeederAddress(uint8_t (&uuid_in)[12]) {
@@ -103,6 +151,7 @@ int IndexPnpBusHost::getFeederAddress(uint8_t (&uuid_in)[12]) {
   txPdu.payload[0] = (uint8_t)IndexPnpBusFunctionCode::getFeederAddress;
   memcpy(txPdu.payload+1, uuid_in, 12);
   txPdu.payloadLength = 13;
+  appModule->txLedTrigger();
   return transmitPdu();
 }
 

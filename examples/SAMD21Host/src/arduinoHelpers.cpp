@@ -45,7 +45,7 @@ void PrintHex8(uint8_t *data, uint8_t length, Stream *ser) {
   ser->println(tmp);                           // print string
 }
 
-void PrintHex16(uint8_t *data, uint8_t length, Stream *ser) {
+void PrintHex16(uint8_t *data, uint8_t length, Stream *ser, boolean add_whitespace) {
   char tmp[length/2*5+1];
   byte first;
   int j=0;
@@ -59,9 +59,36 @@ void PrintHex16(uint8_t *data, uint8_t length, Stream *ser) {
     if (first > 57) tmp[j] = first + (byte)7;  // convert upper nibble to ASCII A..F
     else tmp[j] = first;
     j++;
-    if((i%2) == 1)                             // add whitespace every two bytes
-    tmp[j++] = 32;
+    if (add_whitespace) {
+      if((i%2) == 1)                             // add whitespace every two bytes
+        tmp[j++] = 32;
+    }
   }
-  tmp[length/2*5] = '\0';                      // add \0 to terminate string
+  tmp[j++] = '\0';                             // add \0 to terminate string
   ser->println(tmp);                           // print string
 }
+
+
+char hex_char_to_uint(char hex) {
+  char hex_upper = toupper(hex);
+  if ((hex_upper >= 48) && (hex_upper <= 57)) {
+    // ASCII 0..9
+    return (hex_upper - 48);
+  } else if ((hex_upper >= 65) && (hex_upper <= 70)) {
+    // ASCII A..F
+    return (hex_upper - 65 + 10);
+  } else {
+    // no Hex character
+    return 0;
+  }
+}
+
+
+void conv_hex_to_uint8(char *hex, uint8_t *bytes, uint8_t byte_num) {
+  for (uint8_t i=0; i<byte_num; i++) {
+    uint8_t lower = hex_char_to_uint(hex[i*2]);
+    uint8_t upper = hex_char_to_uint(hex[i*2+1]);
+    bytes[i] = lower | (upper << 4);
+  }
+}
+

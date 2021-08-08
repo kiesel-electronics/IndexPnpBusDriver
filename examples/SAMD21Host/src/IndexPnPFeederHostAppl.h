@@ -30,17 +30,29 @@
 
 class IndexPnPFeederHostAppl : public IndexPnpBusHost_cbk_Interface {
 public:
+  void Init(uint8_t _tx_led_pin, uint8_t _rx_led_pin);
+  void Handler();
+
   void responseGetFeederId(IndexPnpBusResponseCode responseCode, uint8_t *uuid_in);
   void responseInitializeFeeder(IndexPnpBusResponseCode responseCode);
   void responseGetFeederVersion(IndexPnpBusResponseCode responseCode, uint8_t *version_in);
   void responseMoveFeederForward(IndexPnpBusResponseCode responseCode);
   void responseMoveFeederBackward(IndexPnpBusResponseCode responseCode);
-
+  void responseSetUuid(IndexPnpBusResponseCode responseCode);
+  void responseSetParam(IndexPnpBusResponseCode responseCode);
+  void responseGetParam(IndexPnpBusResponseCode responseCode, uint8_t value);
   // broadcast commands
   void responseGetFeederAddress(IndexPnpBusResponseCode responseCode, uint8_t feederAddress);
-
+  // led triggers
+  void txLedTrigger();
+  void rxLedTrigger();
 protected:
 private:
+  volatile unsigned long txLedTimer;
+  volatile unsigned long rxLedTimer;
+  uint8_t tx_led_pin;
+  uint8_t rx_led_pin;
+  void sendResponse(IndexPnpBusResponseCode responseCode, bool addprintln);
 };
 
 

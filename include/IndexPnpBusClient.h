@@ -55,6 +55,9 @@ private:
     initFeeder,
     moveForward,
     moveBackward,
+    setUuid,
+    setParam,
+    getParam,
     };
 
   IndexPnpBusClient::clientStateType state;
